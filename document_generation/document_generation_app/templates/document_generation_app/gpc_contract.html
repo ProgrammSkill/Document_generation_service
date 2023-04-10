@@ -1,0 +1,86 @@
+{% extends 'document_generation_app/base.html' %}
+
+{% block content %}
+
+<form action="{% url 'gpc_contract_generation' %}" id="form_document" method="post" class="p-5">
+    {% csrf_token %}
+
+    <div class="mb-3 form-group col-lg-2 position-relative">
+        <label for="firstname" class="form-label">Номер</label>
+        <input type="text" id="firstname" name="number" class="form-control" maxlength="30" required/>
+    </div>
+
+    <div class="mb-3 col-lg-2 position-relative">
+        <label for="start_date" class="form-label">Начало работ</label>
+        <input type="date" id="start_date" name="start_date" class="form-control" required/>
+    </div>
+
+    <div class="mb-3 col-lg-2 position-relative">
+        <label for="end_date" class="form-label">Окончание работ</label>
+        <input type="date" id="end_date" name="end_date" class="form-control" required/>
+    </div>
+
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label for="address" class="form-label">Адрес</label>
+        <input type="text" id="address" name="address" class="form-control" required/>
+    </div>
+
+<!--    <div class="row g-3 mt-sm-5">-->
+<!--        <div class="mb-3 form-group col-lg-2 position-relative">-->
+<!--            <label for="name_service" class="form-label">Наименование</label>-->
+<!--            <input type="text" id="name_service" name="name_service" class="form-control" maxlength="30"/>-->
+<!--        </div>-->
+
+<!--        <div class="mb-3 form-group col-lg-2 position-relative">-->
+<!--            <label for="type_service" class="form-label">Тип услуги</label>-->
+<!--            <input type="text" id="type_service" name="type_service" class="form-control" maxlength="30"/>-->
+<!--        </div>-->
+
+<!--        <div class="mb-3 form-group col-lg-2 position-relative">-->
+<!--            <label for="price" class="form-label">Тип услуги</label>-->
+<!--            <input type="number" id="price" name="price" class="form-control" maxlength="30"/>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+<!--    <div class="mb-3 form-group col-lg-2 position-relative">-->
+<!--            <input value="Добавить" type="button" id="btn_add_row" name="add_row" class="btn btn-primary">-->
+<!--    </div>-->
+
+<!--    <table id="table" class="table table-hover" name="table_doc">-->
+<!--      <thead>-->
+<!--        <tr>-->
+<!--          <th scope="col">Наименование услуг</th>-->
+<!--          <th scope="col">Тип услуги</th>-->
+<!--          <th scope="col">Цена</th>-->
+<!--        </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--      </tbody>-->
+<!--    </table>-->
+
+    <input value="Добавить" type="button" id="btn_add_row" name="btn_add_row" class="btn btn-primary">
+
+    <table id="table" class="table table-hover" name="table_doc">
+      <thead>
+        <tr>
+          <th scope="col">Наименование услуг</th>
+          <th scope="col">Тип услуги</th>
+          <th scope="col">Цена</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+            <td><input type='text' class="form-control" name='col-1_row-1'></td>
+            <td><input type='text' class="form-control" name='col-2_row-1'></td>
+            <td><input type='number' class="form-control"  name='col-3_row-1'></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="mt-sm-5">
+    <input type="submit" value="Сгенерировать" class="btn btn-primary">
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'document_generation_app/base.html' %}
+
+{% block content %}
+
+<form action="{% url 'removal_order_generation' %}" id="form_document" method="post" class="p-5">
+    {% csrf_token %}
+
+    <div class="mb-3 form-group col-lg-8 position-relative">
+        <label for="name" class="form-label">Наименование территориального органа МВД России на региональном уровне</label>
+        <input type="text" id="name" name="name" class="form-control" required/>
+    </div>
+
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label for="job_title" class="form-label">Должность</label>
+        <input type="text" id="job_title" name="job_title" class="form-control" required/>
+    </div>
+
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label for="base" class="form-label">Договор на основании которого осуществляется трудовая деятельность иностранного гражданина (лицом без гражданства)</label>
+            <select id="base" name="base">
+                <option value="Трудовой договор<">Трудовой договор</option>
+                <option value="Гражданско-правовой договор на выполнение работ (оказание услуг)">Гражданско-правовой договор на выполнение работ (оказание услуг)</option>
+        </select>
+    </div>
+
+
+    <div class="mb-3 col-lg-2 position-relative">
+        <label for="start_date" class="form-label">Дата заключения договора</label>
+        <input type="date" id="start_date" name="start_date" class="form-control" required/>
+    </div>
+
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label for="address" class="form-label">Адрес места осуществления трудовой деятельности</label>
+        <input type="text" id="address" name="address" class="form-control" required/>
+    </div>
+
+
+    <div class="mt-sm-5">
+        <input type="submit" value="Сгенерировать" class="btn btn-primary">
+    </div>
+</form>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link  href="{% static 'document_generation_app/css/styles.css' %}" rel="stylesheet">
+    <link  href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>{{title}}</title>
+</head>
+<body>
+    <ul class="menu">
+        <li><a href="">Договора</a>
+            <ul>
+                <li><a href="{% url 'employment_contract' %}">Трудовой договор</a></li>
+                <li><a href="{% url 'gpc_contract' %}">Договор ГПХ</a></li>
+            </ul>
+        </li>
+        <li><a href="">Приказы</a>
+            <ul>
+                <li><a href="{% url 'removal_order' %}">Приказ об отстранении</a></li>
+            </ul>
+        </li>
+        <li><a href="">Уведомления</a>
+            <ul>
+                <li><a href="{% url 'notice_conclusion' %}">Уведомление о заключении</a></li>
+                <li><a href="">Уведомление о расторжении</a></li>
+            </ul>
+        </li>
+        <li><a href="">Запрос МИФНС о праве организации не удерживать НДФЛ</a></li>
+        <li><a href="">Платежное поручение для оплаты авансового платежа</a></li>
+        <li><a href="">Учеты</a>
+            <ul>
+                <li><a href="">Миграционный учет</a></li>
+            </ul>
+        </li>
+    </ul>
+
+{% block content %}
+{% endblock %}
+
+<div id="footer">
+    <p>&copy; 2023 Частичное или полное копирование информации с данного сайта для распространения на других ресурсах, в том числе и бумажных, строго запрещено.</p>
+</div>
+<!-- Конец footer'а и страницы -->
+<script  type="text/javascript" src="{% static 'document_generation_app/js/jquery-3.6.3.min.js' %}"></script>
+<script  type="text/javascript" src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script  type="text/javascript" src="{% static 'document_generation_app/js/scripts.js' %}"></script>
+</body>
+</html>

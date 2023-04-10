@@ -1,0 +1,23 @@
+{% extends 'document_generation_app/base.html' %}
+
+{% block content %}
+
+<form action="{% url 'removal_order_generation' %}" id="form_document" method="post" class="p-5">
+    {% csrf_token %}
+
+    <div class="mb-3 form-group col-lg-2 position-relative">
+        <label for="firstname" class="form-label">Номер</label>
+        <input type="text" id="firstname" name="number" class="form-control" maxlength="30" required/>
+    </div>
+
+    <div class="mb-3 col-lg-2 position-relative">
+        <label for="start_date" class="form-label">Начало отстранения от работы</label>
+        <input type="date" id="start_date" name="start_date" class="form-control" required/>
+    </div>
+
+    <div class="mt-sm-5">
+        <input type="submit" value="Сгенерировать" class="btn btn-primary">
+    </div>
+</form>
+
+{% endblock %}
