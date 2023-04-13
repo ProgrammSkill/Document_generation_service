@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{% url 'notice_conclusion_generation' %}" id="form_document" method="post" class="p-5">
+<form action="{% url 'termination_notice_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 
     <div class="mb-3 form-group col-lg-8 position-relative">
@@ -25,15 +25,15 @@
 
 
     <div class="mb-3 col-lg-2 position-relative">
-        <label for="start_date" class="form-label">Дата заключения договора</label>
-        <input type="date" id="start_date" name="start_date" class="form-control" required/>
+        <label for="end_date" class="form-label">Дата прекращения договора</label>
+        <input type="date" id="end_date" name="end_date" class="form-control" required/>
     </div>
 
     <div class="mb-3 form-group col-lg-4 position-relative">
-        <label for="address" class="form-label">Адрес места осуществления трудовой деятельности</label>
-        <input type="text" id="address" name="address" class="form-control" maxlength="105" required/>
+        <label class="form-label">Договор прекращён по инициативе иностранного гражданина</label><br>
+          <input type="radio" id="yes" value="yes" name="initiator" required><label for="yes" class="light">Да</label><br>
+          <input type="radio" id="no" value="no" name="initiator" required><label for="no" class="light">Нет</label>
     </div>
-
 
 
     <div class="mb-3 form-group col-lg-4 position-relative">

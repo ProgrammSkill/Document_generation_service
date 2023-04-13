@@ -54,3 +54,7 @@
 	text-decoration: underline;
 	color: #fff;
 }
+
+#block_person_proxy {
+    display: none;
+}

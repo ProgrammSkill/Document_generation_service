@@ -23,3 +23,13 @@ $("#btn_add_row").on("click", function(e){
 //    '<td name="col2_row_' + count +'">' + type_service + '</td>' +
 //    '<td name="col3_row_' + count +'">' + price + '</td></tr>')
 //});
+
+
+$("#person_proxy").on("click", function(e){
+    $("#block_person_proxy").css('display','block');
+    $('.required_input').attr('required', true);
+});
+$("#director").on("click", function(e){
+    $("#block_person_proxy").css('display','none');
+    $('.required_input').attr('required', false);
+});
