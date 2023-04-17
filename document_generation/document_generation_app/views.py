@@ -13,6 +13,9 @@ from datetime import datetime
 from openpyxl import *
 import pytz
 
+# import function of document generations
+from document_generation_app.document_generation_functions.generation_about_arrival import generation_about_arrival
+
 path_file = shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
 
 
@@ -959,6 +962,14 @@ def Generate_Right_not_to_withhold_pit(request):
 
 def About_arrival(request):
     return render(request, 'document_generation_app/about_arrival.html')
+
+
+def Generate_About_arrival(request):
+    if request.method == 'POST':
+        generation_about_arrival(request)
+
+    return redirect('about_arrival')
+
 
 # {
 #     "id": "1fa85f64-1727-4862-b3fc-2c963f66afa4",

@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<form action="{% url 'employment_contract_generation' %}" id="form_document" method="post" class="p-5">
+<form action="{% url 'about_arrival_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 
     <div class="mb-3 form-group col-lg-4 position-relative">
@@ -22,23 +22,23 @@
     <div class="mb-3 form-group col-lg-4 position-relative" id="alien_data_block">
 
         <div class="form-group col-lg-3 position-relative">
-            <label for="series" class="form-label">Серия паспорта</label>
-            <input type="text" id="series" name="series" class="form-control required_input" maxlength="4" required/>
+            <label for="series" class="form-label">Серия</label>
+            <input type="text" id="series" name="series" class="form-control required_input" maxlength="4"/>
         </div>
 
         <div class="mb-3 form-group col-lg-3 position-relative">
-            <label for="number" class="form-label">Номер паспорта</label>
-            <input type="text" id="number" name="number" class="form-control required_input" maxlength="6" required/>
+            <label for="number" class="form-label">Номер</label>
+            <input type="text" id="number" name="number" class="form-control required_input" maxlength="6"/>
         </div>
 
         <div class="mb-3 col-lg-5 position-relative">
             <label for="date_issue" class="form-label">Дата выдачи</label>
-            <input type="date" id="date_issue" name="date_issue" class="form-control required_input" required/>
+            <input type="date" id="date_issue" name="date_issue" class="form-control required_input"/>
         </div>
 
         <div class="mb-3 col-lg-5 position-relative">
             <label for="sell_by" class="form-label">Срок действия до</label>
-            <input type="date" id="sell_by" name="sell_by" class="form-control required_input" required/>
+            <input type="date" id="sell_by" name="sell_by" class="form-control required_input"/>
         </div>
 
     </div>
@@ -66,7 +66,7 @@
 
     <div class="mb-3 form-group col-lg-1 position-relative">
         <label for="phone" class="form-label">Телефон (при наличии)</label>
-        <input type="text" id="phone" name="phone" class="input-medium bfh-phone form-control" data-format="+7 (ddd) ddd-dd-dd" maxlength="10">
+        <input type="text" id="phone" name="phone" class="input-medium bfh-phone form-control" data-format="(ddd) ddd-dd-dd" maxlength="10">
     </div>
 
     <div class="mb-3 form-group col-lg-4 position-relative">
@@ -88,43 +88,43 @@
     <div class="mb-3 form-group col-lg-4 position-relative" id="individual_data_block">
 
         <div class="mb-3 form-group col-lg-5 position-relative">
-            <label for="surname_individual" class="form-label">Фамилия</label>
-            <input type="text" id="surname_individual" name="surname_individual" class="form-control required_input_individual" maxlength="27" required/>
+            <label for="surname_receiving_side" class="form-label">Фамилия</label>
+            <input type="text" id="surname_receiving_side" name="surname_individual" class="form-control required_input_individual" maxlength="27"/>
         </div>
 
         <div class="mb-3 form-group col-lg-5 position-relative">
-            <label for="name_individual" class="form-label">Имя</label>
-            <input type="text" id="name_individual" name="name_individual" class="form-control required_input_individual" maxlength="27" required/>
+            <label for="name_receiving_side" class="form-label">Имя</label>
+            <input type="text" id="name_receiving_side" name="name_receiving_side" class="form-control required_input_individual" maxlength="27"/>
         </div>
 
         <div class="mb-3 form-group col-lg-5 position-relative">
-            <label for="patronymic_individual" class="form-label">Отчество (при наличии)</label>
-            <input type="text" id="patronymic_individual" name="patronymic_individual_individual" class="form-control" maxlength="22"/>
+            <label for="patronymic_receiving_side" class="form-label">Отчество (при наличии)</label>
+            <input type="text" id="patronymic_receiving_side" name="patronymic_individual_individual" class="form-control" maxlength="22"/>
         </div>
 
         <div class="mb-3 form-group col-lg-5 position-relative">
             <label for="type_of_identity_document" class="form-label">Вид документа, удостоверяющий личность</label>
-            <input type="text" id="type_of_identity_document" name="type_of_identity_document" class="form-control required_input_individual" required/>
+            <input type="text" id="type_of_identity_document" name="type_of_identity_document" class="form-control required_input_individual"/>
         </div>
 
         <div class="form-group col-lg-3 position-relative">
-            <label for="series" class="form-label">Серия</label>
-            <input type="text" id="series" name="series" class="form-control required_input_individual" maxlength="4" required/>
+            <label for="series_receiving_side" class="form-label">Серия</label>
+            <input type="text" id="series_receiving_side" name="series_receiving_side" class="form-control required_input_individual" maxlength="4"/>
         </div>
 
         <div class="mb-3 form-group col-lg-3 position-relative">
-            <label for="number" class="form-label">Номер</label>
-            <input type="text" id="number" name="number" class="form-control required_input_individual" maxlength="6" required/>
+            <label for="number_receiving_side" class="form-label">Номер</label>
+            <input type="text" id="number_receiving_side" name="number_receiving_side" class="form-control required_input_individual" maxlength="6"/>
         </div>
 
         <div class="mb-3 col-lg-5 position-relative">
-            <label for="date_issue" class="form-label">Дата выдачи</label>
-            <input type="date" id="date_issue" name="date_issue" class="form-control required_input_individual" required/>
+            <label for="date_issue_receiving_side" class="form-label">Дата выдачи</label>
+            <input type="date" id="date_issue_receiving_side" name="date_issue_receiving_side" class="form-control required_input_individual"/>
         </div>
 
         <div class="mb-3 col-lg-5 position-relative">
-            <label for="sell_by" class="form-label">Срок действия до</label>
-            <input type="date" id="sell_by" name="sell_by" class="form-control required_input_individual" required/>
+            <label for="sell_by_receiving_side" class="form-label">Срок действия до</label>
+            <input type="date" id="sell_by_receiving_side" name="sell_by_receiving_side" class="form-control required_input_individual"/>
         </div>
 
         <br>
@@ -132,27 +132,27 @@
 
         <div class="mb-3 form-group col-lg-8 position-relative">
             <label for="region" class="form-label">Область, край, республика, автономный округ</label>
-            <input type="text" id="region" name="region" class="form-control required_input_individual" required/>
+            <input type="text" id="region" name="region" class="form-control required_input_individual"/>
         </div>
 
         <div class="mb-3 form-group col-lg-8 position-relative">
             <label for="area" class="form-label">Район</label>
-            <input type="text" id="area" name="area" class="form-control required_input_individual" required/>
+            <input type="text" id="area" name="area" class="form-control required_input_individual"/>
         </div>
 
         <div class="mb-3 form-group col-lg-8 position-relative">
             <label for="city" class="form-label">Город или другой населенный пункт</label>
-            <input type="text" id="city" name="city" class="form-control required_input_individual" required/>
+            <input type="text" id="city" name="city" class="form-control required_input_individual"/>
         </div>
 
         <div class="mb-3 form-group col-lg-8 position-relative">
             <label for="street" class="form-label">Улица</label>
-            <input type="text" id="street" name="street" class="form-control required_input_individual" required/>
+            <input type="text" id="street" name="street" class="form-control required_input_individual"/>
         </div>
 
         <div class="mb-3 form-group col-lg-3 position-relative">
             <label for="house" class="form-label">Дом</label>
-            <input type="text" id="house" name="house" class="form-control required_input_individual" maxlength="4" required/>
+            <input type="text" id="house" name="house" class="form-control required_input_individual" maxlength="4"/>
         </div>
 
         <div class="mb-3 form-group col-lg-3 position-relative">
