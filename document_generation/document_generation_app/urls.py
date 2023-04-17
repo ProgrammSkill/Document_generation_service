@@ -16,4 +16,6 @@ urlpatterns = [
     path("right_not_to_withhold_pit/generation", Generate_Right_not_to_withhold_pit,
          name='right_not_to_withhold_pit_generation'),
     path("right_not_to_withhold_pit/", Right_not_to_withhold_pit, name='right_not_to_withhold_pit'),
+    path("about_arrival/", About_arrival, name='about_arrival'),
+
 ]

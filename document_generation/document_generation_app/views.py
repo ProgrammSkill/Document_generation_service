@@ -11,6 +11,7 @@ from docx.shared import *
 from win32com.shell import shell, shellcon
 from datetime import datetime
 from openpyxl import *
+import pytz
 
 path_file = shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
 
@@ -183,9 +184,9 @@ def Generate_GPC_Document(request):
 
 
         number = request.POST.get('number')
-        obj_start_date = datetime.datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d')
+        obj_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d')
         start_date = Date_conversion(obj_start_date.strftime("%d-%m-%Y"), 'word_month')
-        obj_end_date = datetime.datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d')
+        obj_end_date = datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d')
         end_date = Date_conversion(obj_end_date.strftime("%d-%m-%Y"), 'word_month')
         address = request.POST.get('address')
         table_doc = request.POST.get('table_doc')
@@ -751,6 +752,7 @@ def Generate_Termination_notice(request):
         index = 0
         list_columns_phone = ['U', 'W', 'Y', 'AA', 'AC', 'AE', 'AG', 'AI', 'AK', 'AM', 'AO', 'AQ', 'AS', 'AU', 'AW',
                               'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO', 'BQ']
+
         for symbol in list_phone:
             for col in range(index, len(list_columns_phone)):
                 cell = list_columns_phone[index] + str(row)
@@ -850,10 +852,10 @@ def Generate_Right_not_to_withhold_pit(request):
         phone = company["contactInfo"]["phone"].upper()
         list_phone = list(phone)
         inn = company['inn']
+        list_inn = list(inn)
         kpp = company['kpp']
-        list_inn_kpp = list(f'{inn}' + '/' + f'{kpp}')
         ogrn = company['ogrn']
-        list_ogrn = list('ОГРН ' + ogrn)
+        list_ogrn = list(ogrn)
         paymentAccount = company['bank']['paymentAccount'].upper()
         correspondentAccount = company['bank']['correspondentAccount'].upper()
         legalAddress = company['legalAddress']["name"].upper()
@@ -865,7 +867,98 @@ def Generate_Right_not_to_withhold_pit(request):
         # passport_series = 'AC'.upper()
         # passport_number = '4348554'.upper()
 
-        name = request.POST.get('code')
+        code = request.POST.get('code')
+        list_code = list(code)
+
+
+        path_file_doc = 'document_generation_app/document_templates/right_not_to_withhold_pit.xlsx'
+        doc = load_workbook(path_file_doc)
+        sheet = doc.active
+
+        list_columns = ['X', 'AA', 'AD', 'AG', 'AJ',
+                        'AM', 'AP', 'AS', 'AV', 'AY', 'BB', 'BH']
+
+        row = 2
+        index = 0
+        for symbol in list_inn:
+            for col in range(index, len(list_columns)):
+                cell = list_columns[index] + str(row)
+                sheet[f'{cell}'] = symbol
+                index += 1
+                break
+
+
+        list_columns = ['X', 'AA', 'AD', 'AG', 'AJ',
+                        'AM', 'AP', 'AS', 'AV']
+        row = 4
+        index = 0
+        for symbol in list_ogrn:
+            for col in range(index, len(list_columns)):
+                cell = list_columns[index] + str(row)
+                sheet[f'{cell}'] = symbol
+                index += 1
+                break
+
+
+        # Input code
+        sheet["CF8"] = list_code[0]
+        sheet["CJ8"] = list_code[1]
+        sheet["CO8"] = list_code[2]
+        sheet["CT8"] = list_code[3]
+
+
+        list_columns = ['B', 'C', 'E', 'F', 'G', 'I', 'L', 'N', 'P', 'S', 'U', 'W', 'Z', 'AC', 'AF', 'AI','AL',
+                        'AO', 'AR', 'AU', 'AX', 'AY', 'BA', 'BC', 'BD', 'BE', 'BF', 'BG', 'BH', 'BE', 'BJ', 'BK', 'BL',
+                        'BM', 'BO', 'BP', 'BR', 'BS', 'BU', 'BV', 'BW', 'BX', 'BY', 'BZ', 'CA', 'CB', 'CC', 'CE']
+        row = 11
+        index = 0
+        for symbol in list_organization:
+            for col in range(index, len(list_columns)):
+                cell = list_columns[index] + str(row)
+                if list_columns[index] == 'CE':
+                    sheet[f'{cell}'] = symbol
+                    row += 2
+                    index = 0
+                    break
+                sheet[f'{cell}'] = symbol
+                index += 1
+                break
+
+
+        now_date = datetime.now(pytz.timezone('UTC'))
+        now_date = Date_conversion(now_date.strftime('%d-%m-%Y'))
+        list_now_date = list(now_date)
+
+        list_columns = ['U', 'W', 'Z', 'AC', 'AF',
+                        'AI', 'AL', 'AO', 'AR', 'AU']
+        row = 46
+        index = 0
+        for symbol in list_now_date:
+            for col in range(index, len(list_columns)):
+                cell = list_columns[index] + str(row)
+                sheet[f'{cell}'] = symbol
+                index += 1
+                break
+
+
+        global path_file
+        path = path_file
+        if os.path.exists(path + '/' + 'right_not_to_withhold_pit.xlsx') == False:
+            doc.save(path + '/' + 'right_not_to_withhold_pit.xlsx')
+        else:
+            i = 1
+            while True:
+                if os.path.exists(path_file + '/' + f'right_not_to_withhold_pit{i}.xlsx') == False:
+                    path = path_file + '/' + f'right_not_to_withhold_pit{i}.xlsx'
+                    doc.save(path)
+                    break
+                i += 1
+
+    return redirect('right_not_to_withhold_pit')
+
+
+def About_arrival():
+    pass
 
 # {
 #     "id": "1fa85f64-1727-4862-b3fc-2c963f66afa4",
