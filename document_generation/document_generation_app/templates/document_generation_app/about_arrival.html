@@ -5,47 +5,176 @@
 <form action="{% url 'employment_contract_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 
-    <div class="mb-3 form-group col-lg-2 position-relative">
-        <label for="firstname" class="form-label">Вид и реквезиты документа, подтверждающего право на пребывание (проживание) в стране</label>
-        <input type="radio" id="firstname" name="number" class="form-control" maxlength="30" required/>
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label class="form-label">Вид и реквезиты документа, подтверждающего право на пребывание (проживание) в стране</label>
+
+        <input type="radio" value="visa" id="visa" name="document_type" class="light document" required/><label for="visa" class="form-label">Виза</label><br>
+
+        <input type="radio" value="resident_card" id="resident_card" name="document_type" class="light document" required/><label for="resident_card" class="form-label">Вид на жительство</label><br>
+
+        <input type="radio" value="temporary_residence_permit" id="temporary_residence_permit" name="document_type" class="light document" required/><label for="temporary_residence_permit" class="form-label">Разрешение на временное проживание</label><br>
+
+        <input type="radio" value="temporary_residence_permit_for_the_purpose_of_education" id="temporary_residence_permit_for_the_purpose_of_education" name="document_type" class="light document" required/><label for="temporary_residence_permit_for_the_purpose_of_education" class="form-label">Разрешение на временное проживание в целя получения образования</label><br>
+
+        <input type="radio" value="absent" id="absent" name="document_type" class="light document" required checked/><label for="absent" class="form-label">Отсутствует</label><br>
+    </div>
+
+    <div class="mb-3 form-group col-lg-4 position-relative" id="alien_data_block">
+
+        <div class="form-group col-lg-3 position-relative">
+            <label for="series" class="form-label">Серия паспорта</label>
+            <input type="text" id="series" name="series" class="form-control required_input" maxlength="4" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="number" class="form-label">Номер паспорта</label>
+            <input type="text" id="number" name="number" class="form-control required_input" maxlength="6" required/>
+        </div>
+
+        <div class="mb-3 col-lg-5 position-relative">
+            <label for="date_issue" class="form-label">Дата выдачи</label>
+            <input type="date" id="date_issue" name="date_issue" class="form-control required_input" required/>
+        </div>
+
+        <div class="mb-3 col-lg-5 position-relative">
+            <label for="sell_by" class="form-label">Срок действия до</label>
+            <input type="date" id="sell_by" name="sell_by" class="form-control required_input" required/>
+        </div>
+
+    </div>
+
+
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label class="form-label">Цель выезда</label><br>
+
+        <input type="radio" value="official" id="official" name="purpose_departure" class="light" required checked/><label for="official" class="form-label">Служебная</label><br>
+
+        <input type="radio" value="official" id="business" name="purpose_departure" class="light" required/><label for="business" class="form-label">Деловая</label><br>
+
+        <input type="radio" value="studies" id="studies" name="purpose_departure" class="light" required/><label for="studies" class="form-label">Учеба</label><br>
+
+        <input type="radio" value="job" id="job" name="purpose_departure" class="light" required/><label for="job" class="form-label">Работа</label><br>
+
+        <input type="radio" value="private" id="private" name="purpose_departure" class="light" required/><label for="private" class="form-label">Частная</label><br>
+
+        <input type="radio" value="transit" id="transit" name="purpose_departure" class="light" required/><label for="transit" class="form-label">Транзит</label><br>
+
+        <input type="radio" value="humanitarian" id="humanitarian" name="purpose_departure" class="light" required/><label for="humanitarian" class="form-label">Гуманитарная</label><br>
+
+        <input type="radio" value="other" id="other" name="purpose_departure" class="light" required/><label for="other" class="form-label">Иная</label><br>
+    </div>
+
+    <div class="mb-3 form-group col-lg-1 position-relative">
+        <label for="phone" class="form-label">Телефон (при наличии)</label>
+        <input type="text" id="phone" name="phone" class="input-medium bfh-phone form-control" data-format="+7 (ddd) ddd-dd-dd" maxlength="10">
     </div>
 
     <div class="mb-3 form-group col-lg-4 position-relative">
-        <label for="job_title" class="form-label">Должность</label>
-        <input type="text" id="job_title" name="job_title" class="form-control" required/>
-    </div>
-
-    <div class="mb-3 form-group col-lg-2 position-relative">
-        <label for="salary" class="form-label">Размер оклада</label>
-        <input type="number" id="salary" name="salary" class="form-control" required/>
+        <label for="job_title" class="form-label">Профессия</label>
+        <input type="text" id="job_title" name="job_title" class="form-control" maxlength="105" required/>
     </div>
 
     <div class="mb-3 col-lg-2 position-relative">
-        <label for="start_date" class="form-label">Начало работ</label>
-        <input type="date" id="start_date" name="start_date" class="form-control" required/>
-    </div>
-
-    <div class="mb-3 col-lg-2 position-relative">
-        <label for="end_date" class="form-label">Окончание работ</label>
+        <label for="end_date" class="form-label">Срок пребывания до</label>
         <input type="date" id="end_date" name="end_date" class="form-control" required/>
     </div>
 
-    <div class="mb-3 form-group col-lg-6 position-relative">
-        <label for="cause" class="form-label">Причина заключения срочного трудового договора</label>
-        <input type="text" id="cause" name="cause" class="form-control" required/>
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label class="form-label">Принимающая сторона</label><br>
+          <input type="radio" id="legal_entity" value="legal_entity" name="receiving_side" required checked><label for="legal_entity" class="light">Юридическое лицо</label><br>
+          <input type="radio" id="individual" value="individual" name="receiving_side" required><label for="individual" class="light">Физическое лицо</label><br>
     </div>
 
-    <div class="mb-3 form-group col-lg-1 position-relative">
-        <label for="start_time" class="form-label">Время начало работы</label>
-        <input type="time" id="start_time" name="start_time" class="form-control" required/>
-    </div>
+    <div class="mb-3 form-group col-lg-4 position-relative" id="individual_data_block">
 
-    <div class="mb-3 form-group col-lg-1 position-relative">
-        <label for="end_time" class="form-label">Время окончания работы</label>
-        <input type="time" id="end_time" name="end_time" class="form-control" required/>
+        <div class="mb-3 form-group col-lg-5 position-relative">
+            <label for="surname_individual" class="form-label">Фамилия</label>
+            <input type="text" id="surname_individual" name="surname_individual" class="form-control required_input_individual" maxlength="27" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-5 position-relative">
+            <label for="name_individual" class="form-label">Имя</label>
+            <input type="text" id="name_individual" name="name_individual" class="form-control required_input_individual" maxlength="27" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-5 position-relative">
+            <label for="patronymic_individual" class="form-label">Отчество (при наличии)</label>
+            <input type="text" id="patronymic_individual" name="patronymic_individual_individual" class="form-control" maxlength="22"/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-5 position-relative">
+            <label for="type_of_identity_document" class="form-label">Вид документа, удостоверяющий личность</label>
+            <input type="text" id="type_of_identity_document" name="type_of_identity_document" class="form-control required_input_individual" required/>
+        </div>
+
+        <div class="form-group col-lg-3 position-relative">
+            <label for="series" class="form-label">Серия</label>
+            <input type="text" id="series" name="series" class="form-control required_input_individual" maxlength="4" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="number" class="form-label">Номер</label>
+            <input type="text" id="number" name="number" class="form-control required_input_individual" maxlength="6" required/>
+        </div>
+
+        <div class="mb-3 col-lg-5 position-relative">
+            <label for="date_issue" class="form-label">Дата выдачи</label>
+            <input type="date" id="date_issue" name="date_issue" class="form-control required_input_individual" required/>
+        </div>
+
+        <div class="mb-3 col-lg-5 position-relative">
+            <label for="sell_by" class="form-label">Срок действия до</label>
+            <input type="date" id="sell_by" name="sell_by" class="form-control required_input_individual" required/>
+        </div>
+
+        <br>
+        <p>Место жительство</p>
+
+        <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="region" class="form-label">Область, край, республика, автономный округ</label>
+            <input type="text" id="region" name="region" class="form-control required_input_individual" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="area" class="form-label">Район</label>
+            <input type="text" id="area" name="area" class="form-control required_input_individual" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="city" class="form-label">Город или другой населенный пункт</label>
+            <input type="text" id="city" name="city" class="form-control required_input_individual" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="street" class="form-label">Улица</label>
+            <input type="text" id="street" name="street" class="form-control required_input_individual" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="house" class="form-label">Дом</label>
+            <input type="text" id="house" name="house" class="form-control required_input_individual" maxlength="4" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="frame" class="form-label">Корпус</label>
+            <input type="text" id="frame" name="frame" class="form-control" maxlength="5"/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="structure" class="form-label">Строение</label>
+            <input type="text" id="structure" name="structure" class="form-control" maxlength="4"/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-2 position-relative">
+            <label for="apartment" class="form-label">Квартира</label>
+            <input type="text" id="apartment" name="apartment" class="form-control" maxlength="4"/>
+        </div>
+
     </div>
 
     <div class="mt-sm-5">
         <input type="submit" value="Сгенерировать" class="btn btn-primary">
     </div>
 </form>
+
+{% endblock %}

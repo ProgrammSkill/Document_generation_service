@@ -1,5 +1,6 @@
 .menu {
     display: flex;
+     z-index: 10;
 }
 
 
@@ -8,6 +9,7 @@
     list-style: none;
     background: #056efd;
     position: relative;
+    z-index: 10;
 }
 
 .menu a{
@@ -19,10 +21,12 @@
     height: 40px;
     line-height: 40px;
     transition: all .5s;
+    z-index: 10;
 }
 
 .menu a:hover{
     background:  #040efd;
+    z-index: 10;
 }
 
 .menu ul{
@@ -31,10 +35,12 @@
     top: 100%;
     display: none;
     padding: 0;
+    z-index: 10;
 }
 
 .menu li:hover ul{
     display: block;
+    z-index: 10;
 }
 
 #footer {
@@ -56,5 +62,13 @@
 }
 
 #block_person_proxy {
+    display: none;
+}
+
+#alien_data_block {
+    display: none;
+}
+
+#individual_data_block {
     display: none;
 }

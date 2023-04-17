@@ -957,8 +957,8 @@ def Generate_Right_not_to_withhold_pit(request):
     return redirect('right_not_to_withhold_pit')
 
 
-def About_arrival():
-    pass
+def About_arrival(request):
+    return render(request, 'document_generation_app/about_arrival.html')
 
 # {
 #     "id": "1fa85f64-1727-4862-b3fc-2c963f66afa4",

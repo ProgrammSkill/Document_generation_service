@@ -33,3 +33,24 @@ $("#director").on("click", function(e){
     $("#block_person_proxy").css('display','none');
     $('.required_input').attr('required', false);
 });
+
+
+$(".document").on("click", function(e){
+    $("#alien_data_block").css('display','block');
+    $('.required_input').attr('required', true);
+});
+$("#absent").on("click", function(e){
+    $("#alien_data_block").css('display','none');
+    $('.required_input').attr('required', false);
+});
+
+
+$("#individual").on("click", function(e){
+    $("#individual_data_block").css('display','block');
+    $('.required_input_individual').attr('required', true);
+});
+$("#legal_entity").on("click", function(e){
+    $("#individual_data_block").css('display','none');
+    $('.required_input_individual').attr('required', false);
+});
+
