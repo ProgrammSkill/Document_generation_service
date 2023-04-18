@@ -54,7 +54,7 @@ $("#legal_entity").on("click", function(e){
     $('.required_input_individual').attr('required', false);
 });
 
-$(function(){
-  $("#phone").mask("+7(999) 999-9999");
-});
+$(document).ready(function() {
+    $("#phone").mask("(999) 999-9999");
+})
 

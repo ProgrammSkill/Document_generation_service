@@ -126,7 +126,18 @@ def generation_about_arrival(request):
 
     phone = request.POST.get('phone')
     if phone != '':
-        pass
+        trans_table = {ord('('): None, ord(')'): None, ord(' '): None, ord('-'): None}
+        phone = phone.translate(trans_table)
+        sheet["CD46"] = phone[0]
+        sheet["CH46"] = phone[1]
+        sheet["CL46"] = phone[2]
+        sheet["CP46"] = phone[3]
+        sheet["CT46"] = phone[4]
+        sheet["CX46"] = phone[5]
+        sheet["DB46"] = phone[6]
+        sheet["DF46"] = phone[7]
+        sheet["DJ46"] = phone[8]
+        sheet["DN46"] = phone[9]
 
 
     global path_file
