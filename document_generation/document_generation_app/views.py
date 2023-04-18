@@ -783,8 +783,8 @@ def Generate_Termination_notice(request):
         elif base == 'Гражданско-правовой договор на выполнение работ (оказание услуг)':
             sheet['W161'] = 'X'
 
-        start_date = Date_conversion(end_date)
-        arr_date = start_date.split('.')
+        end_date = Date_conversion(end_date)
+        arr_date = end_date.split('.')
         # day
         sheet['AX167'] = arr_date[0][0]
         sheet['AZ167'] = arr_date[0][1]
