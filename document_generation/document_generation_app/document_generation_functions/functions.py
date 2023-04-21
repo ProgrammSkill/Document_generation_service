@@ -1,3 +1,8 @@
+import os
+from win32com.shell import shell, shellcon
+def Get_path_file():
+    return shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
+
 def Date_conversion(date, type=None):
     arr_date = date.split('-')
     day = arr_date[0]

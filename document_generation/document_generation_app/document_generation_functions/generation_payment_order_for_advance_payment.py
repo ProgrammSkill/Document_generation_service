@@ -6,10 +6,10 @@ from win32com.shell import shell, shellcon
 from datetime import datetime
 import pytz
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
-from document_generation_app.document_generation_functions.functions import Date_conversion
+from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
 from dateutil.relativedelta import relativedelta
 
-path_file = shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
+path_file = Get_path_file()
 
 dict_patent_cost = [
     {'region': 'Москва', 'price': 6600},
@@ -148,7 +148,7 @@ def Generate_Generation_payment_order_for_advance_payment(request):
         sum = 0
         for obj in dict_patent_cost:
             print(obj)
-            if obj['city'] == territory_of_action:
+            if obj['region'] == territory_of_action:
                 sum = obj['price'] * number_months
                 break
 
