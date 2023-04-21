@@ -18,5 +18,7 @@ urlpatterns = [
     path("right_not_to_withhold_pit/", Right_not_to_withhold_pit, name='right_not_to_withhold_pit'),
     path("about_arrival/generation", Generate_About_arrival, name='about_arrival_generation'),
     path("about_arrival/", About_arrival, name='about_arrival'),
-
+    path("payment_order_for_advance_payment/generation", Generate_Payment_order_for_advance_payment,
+         name='payment_order_for_advance_payment_generation'),
+    path("payment_order_for_advance_payment/", Payment_order_for_advance_payment, name='payment_order_for_advance_payment'),
 ]

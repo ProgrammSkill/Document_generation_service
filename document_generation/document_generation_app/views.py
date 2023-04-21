@@ -14,7 +14,8 @@ from openpyxl import *
 import pytz
 
 # import function of document generations
-from document_generation_app.document_generation_functions.generation_about_arrival import generation_about_arrival
+from document_generation_app.document_generation_functions.generation_about_arrival import Generation_about_arrival
+from document_generation_app.document_generation_functions.generation_payment_order_for_advance_payment import Generate_Generation_payment_order_for_advance_payment
 
 path_file = shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
 
@@ -966,9 +967,18 @@ def About_arrival(request):
 
 def Generate_About_arrival(request):
     if request.method == 'POST':
-        generation_about_arrival(request)
+        Generation_about_arrival(request)
 
     return redirect('about_arrival')
+
+def Payment_order_for_advance_payment(request):
+    return render(request, 'document_generation_app/payment_order_for_advance_payment.html')
+
+def Generate_Payment_order_for_advance_payment(request):
+    if request.method == 'POST':
+        Generate_Generation_payment_order_for_advance_payment(request)
+
+    return redirect('payment_order_for_advance_payment')
 
 
 # {

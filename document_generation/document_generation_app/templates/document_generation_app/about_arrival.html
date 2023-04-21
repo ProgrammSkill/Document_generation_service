@@ -73,7 +73,7 @@
 
     <div class="mb-3 form-group col-lg-4 position-relative">
         <label for="job_title" class="form-label">Профессия</label>
-        <input type="text" id="job_title" name="job_title" class="form-control" maxlength="105" required/>
+        <input type="text" id="job_title" name="job_title" class="form-control" maxlength="26" required/>
     </div>
 
     <div class="mb-3 col-lg-2 position-relative">
@@ -91,7 +91,7 @@
 
         <div class="mb-3 form-group col-lg-5 position-relative">
             <label for="surname_receiving_side" class="form-label">Фамилия</label>
-            <input type="text" id="surname_receiving_side" name="surname_individual" class="form-control required_input_individual" maxlength="27"/>
+            <input type="text" id="surname_receiving_side" name="surname_receiving_side" class="form-control required_input_individual" maxlength="27"/>
         </div>
 
         <div class="mb-3 form-group col-lg-5 position-relative">
@@ -101,7 +101,7 @@
 
         <div class="mb-3 form-group col-lg-5 position-relative">
             <label for="patronymic_receiving_side" class="form-label">Отчество (при наличии)</label>
-            <input type="text" id="patronymic_receiving_side" name="patronymic_individual_individual" class="form-control" maxlength="22"/>
+            <input type="text" id="patronymic_receiving_side" name="patronymic_receiving_side" class="form-control" maxlength="22"/>
         </div>
 
         <div class="mb-3 form-group col-lg-5 position-relative">
@@ -173,6 +173,48 @@
         </div>
 
     </div>
+
+    <br><br>
+    <p>В установленном порядке уведомил о прибытии в место пребывания по адресу:</p>
+    <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="worker_place_region" class="form-label">Область, край, республика, автономный округ</label>
+            <input type="text" id="worker_place_region" name="worker_place_region" class="form-control" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="worker_place_area" class="form-label">Район</label>
+            <input type="text" id="worker_place_area" name="worker_place_area" class="form-control"/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="worker_place_city" class="form-label">Город или другой населенный пункт</label>
+            <input type="text" id="worker_place_city" name="worker_place_city" class="form-control" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-8 position-relative">
+            <label for="worker_place_street" class="form-label">Улица</label>
+            <input type="text" id="worker_place_street" name="worker_place_street" class="form-control" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="worker_place_house" class="form-label">Дом</label>
+            <input type="text" id="worker_place_house" name="worker_place_house" class="form-control" maxlength="4" required/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="worker_place_frame" class="form-label">Корпус</label>
+            <input type="text" id="worker_place_frame" name="worker_place_frame" class="form-control" maxlength="5"/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-3 position-relative">
+            <label for="worker_place_structure" class="form-label">Строение</label>
+            <input type="text" id="worker_place_structure" name="worker_place_structure" class="form-control" maxlength="4"/>
+        </div>
+
+        <div class="mb-3 form-group col-lg-2 position-relative">
+            <label for="worker_place_apartment" class="form-label">Квартира</label>
+            <input type="text" id="worker_place_apartment" name="worker_place_apartment" class="form-control" maxlength="4"/>
+        </div>
 
     <div class="mt-sm-5">
         <input type="submit" value="Сгенерировать" class="btn btn-primary">
