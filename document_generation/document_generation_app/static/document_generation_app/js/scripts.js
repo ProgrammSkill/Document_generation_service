@@ -54,6 +54,16 @@ $("#legal_entity").on("click", function(e){
     $('.required_input_individual').attr('required', false);
 });
 
+
+$("#urgent").on("click", function(e){
+    $("#block_end_date_urgent").css('display','block');
+    $('#end_date_urgent').attr('required', true);
+});
+$("#perpetual").on("click", function(e){
+    $("#block_end_date_urgent").css('display','none');
+    $('#end_date_urgent').attr('required', false);
+});
+
 $(document).ready(function() {
     $("#phone").mask("(999) 999-9999");
 })

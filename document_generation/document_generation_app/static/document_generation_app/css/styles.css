@@ -72,3 +72,7 @@
 #individual_data_block {
     display: none;
 }
+
+#block_end_date_urgent {
+    display: none;
+}

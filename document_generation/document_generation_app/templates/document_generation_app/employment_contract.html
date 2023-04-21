@@ -20,19 +20,27 @@
         <input type="number" id="salary" name="salary" class="form-control" required/>
     </div>
 
+    <div class="mb-3 form-group col-lg-4 position-relative">
+        <label class="form-label">Тип трудового договора</label><br>
+          <input type="radio" id="perpetual" value="perpetual" name="contract_type" required checked><label for="perpetual" class="light">Бессрочный договор</label><br>
+          <input type="radio" id="urgent" value="urgent" name="contract_type" required><label for="urgent" class="light">Срочный договор</label><br>
+    </div>
+
     <div class="mb-3 col-lg-2 position-relative">
         <label for="start_date" class="form-label">Начало работ</label>
         <input type="date" id="start_date" name="start_date" class="form-control" required/>
     </div>
 
-    <div class="mb-3 col-lg-2 position-relative">
-        <label for="end_date" class="form-label">Окончание работ</label>
-        <input type="date" id="end_date" name="end_date" class="form-control" required/>
-    </div>
+    <div id="block_end_date_urgent">
+        <div class="mb-3 col-lg-2 position-relative">
+            <label for="end_date_urgent" class="form-label">Окончание работ</label>
+            <input type="date" id="end_date_urgent" name="end_date_urgent" class="form-control"/>
+        </div>
 
-    <div class="mb-3 form-group col-lg-6 position-relative">
-        <label for="cause" class="form-label">Причина заключения срочного трудового договора</label>
-        <input type="text" id="cause" name="cause" class="form-control" required/>
+        <div class="mb-3 form-group col-lg-6 position-relative">
+            <label for="cause" class="form-label">Причина заключения срочного трудового договора</label>
+            <input type="text" id="cause" name="cause" class="form-control" required/>
+        </div>
     </div>
 
     <div class="mb-3 form-group col-lg-1 position-relative">

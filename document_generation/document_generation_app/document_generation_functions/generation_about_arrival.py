@@ -2,30 +2,10 @@ import os
 from win32com.shell import shell, shellcon
 from datetime import datetime
 from openpyxl import *
+from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
 
-path_file = shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
+path_file = Get_path_file()
 
-def Date_conversion(date, type=None):
-    arr_date = date.split('-')
-    day = arr_date[0]
-    arr_month = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря']
-    month = arr_date[1]
-    month = int(month)
-    month_conversion = arr_month[month-1]
-    year = arr_date[2]
-
-    if type == 'quotes':
-        if day[0] == '0':
-            day = day[1]
-        date = '\"' + day + '\" ' + month_conversion + ' ' + year + ' г.'
-    elif type == 'word_month':
-        if day[0] == '0':
-            day = day[1]
-        date = day + ' ' + month_conversion + ' ' + year + ' г.'
-    else:
-        date = day + '.' + arr_date[1] + '.' + year
-
-    return date
 
 # def Filling_cells(path_file_doc, name_sheet, value, row, list_columns):
 #     doc = load_workbook(f'{path_file_doc}')

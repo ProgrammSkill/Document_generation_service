@@ -43,10 +43,11 @@ def IndividualAPI():
         "patronymic": None,
         "inn": "4857522812",
         "kpp": "413401002",
+        'temporary_registration': 'РОССИЯ, 188310, Ленинградская обл, Гатчинский р-н, Гатчина г, Авиатриссы Зверевой ул, Дом 20, Корпус 1, Квартира 5',
         "passport": {
-            "series": 'string',
-            "number": 'string',
-            "date_of_issue": 'date',
+            "series": 'АС',
+            "number": '8651642',
+            "date_of_issue": '2012-10-25',
             "registration_address": "г. Алматы, р-н. Бостандский"
         },
         "patent": {
@@ -54,8 +55,8 @@ def IndividualAPI():
             "number": '365451',
             "territory_of_action": 'Санкт-Петербург',
             "kind_of_activity": 'string',
-            "date_of_issue": "2022-06-12",
-            "expiration_date": '2023-09-01',
+            "date_of_issue": "2023-06-07",
+            "expiration_date": '2023-06-08',
         },
         "bank": {
             "id": 0,
