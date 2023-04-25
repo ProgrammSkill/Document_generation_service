@@ -4,6 +4,8 @@ from datetime import datetime
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
 
+path_file = Get_path_file()
+
 def Generation_removal_older(request):
     company = CompanyAPI()
     organization = company["organizationalForm"] + ' "' + company["name"] + '"'

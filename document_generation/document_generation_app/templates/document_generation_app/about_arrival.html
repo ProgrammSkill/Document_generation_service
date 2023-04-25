@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h2 class="p-4">Уведомление о прибытии иностранного работника</h2>
+
 <form action="{% url 'about_arrival_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 

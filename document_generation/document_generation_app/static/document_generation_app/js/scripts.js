@@ -58,10 +58,12 @@ $("#legal_entity").on("click", function(e){
 $("#urgent").on("click", function(e){
     $("#block_end_date_urgent").css('display','block');
     $('#end_date_urgent').attr('required', true);
+    $('#cause').attr('required', true);
 });
 $("#perpetual").on("click", function(e){
     $("#block_end_date_urgent").css('display','none');
     $('#end_date_urgent').attr('required', false);
+    $('#cause').attr('required', false);
 });
 
 $(document).ready(function() {

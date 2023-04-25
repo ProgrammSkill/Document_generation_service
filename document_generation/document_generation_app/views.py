@@ -14,14 +14,12 @@ from document_generation_app.document_generation_functions.generation_notice_con
 from document_generation_app.document_generation_functions.generation_termination_notice import Generation_termination_notice
 from document_generation_app.document_generation_functions.generation_right_not_to_withhold_pit import Generation_generation_right_not_to_withhold_pit
 
-path_file = shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
-
 
 def index(request):
-    return render(request,'document_generation_app/index.html')
+    return render(request, 'document_generation_app/index.html')
 
 def Employment_contract_Document(request):
-    return render(request,'document_generation_app/employment_contract.html')
+    return render(request, 'document_generation_app/employment_contract.html')
 
 
 def Generate_Employment_contract_Document(request):
@@ -94,7 +92,6 @@ def Payment_order_for_advance_payment(request):
 def Generate_Payment_order_for_advance_payment(request):
     if request.method == 'POST':
         Generate_Generation_payment_order_for_advance_payment(request)
-
     return redirect('payment_order_for_advance_payment')
 
 

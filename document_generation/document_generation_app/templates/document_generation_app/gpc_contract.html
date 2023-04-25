@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h2 class="p-4">ГПХ договор</h2>
+
 <form action="{% url 'gpc_contract_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 

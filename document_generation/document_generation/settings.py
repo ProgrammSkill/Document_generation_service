@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'document_generation_app.apps.DocumentGenerationAppConfig'
+    "rest_framework",
+    "drf_yasg",
+    "document_generation_app.apps.DocumentGenerationAppConfig"
 ]
 
 MIDDLEWARE = [

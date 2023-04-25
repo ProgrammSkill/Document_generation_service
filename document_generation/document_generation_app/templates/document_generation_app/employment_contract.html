@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h2 class="p-4">Трудовой договор</h2>
+
 <form action="{% url 'employment_contract_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 
@@ -39,7 +41,7 @@
 
         <div class="mb-3 form-group col-lg-6 position-relative">
             <label for="cause" class="form-label">Причина заключения срочного трудового договора</label>
-            <input type="text" id="cause" name="cause" class="form-control" required/>
+            <input type="text" id="cause" name="cause" class="form-control"/>
         </div>
     </div>
 

@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h2 class="p-4">Запрос МИФНС о праве организации не удерживать НДФЛ</h2>
+
 <form action="{% url 'right_not_to_withhold_pit_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 

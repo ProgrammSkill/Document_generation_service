@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h2 class="p-4">Уведомление о расторжении</h2>
+
 <form action="{% url 'termination_notice_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 

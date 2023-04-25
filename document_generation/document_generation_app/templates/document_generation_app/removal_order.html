@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h2 class="p-4">Приказ об отстранении</h2>
+
 <form action="{% url 'removal_order_generation' %}" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 
