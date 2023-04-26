@@ -12,7 +12,7 @@ from document_generation_app.document_generation_functions.functions import Date
 path_file = Get_path_file()
 
 
-def Generation_employment_contract_document(request):
+def Generation_employment_contract_document(validated_data):
     company = CompanyAPI()
     organization = company["organizationalForm"] + ' "' + company["name"] + '"'
     phone = company["contactInfo"]["phone"]
@@ -29,27 +29,28 @@ def Generation_employment_contract_document(request):
     passport_series = 'AC'
     passport_number = '4348554'
 
-    number = request.POST.get('number')
-    job_title = request.POST.get('job_title')
-    salary = request.POST.get('salary')
-    contract_type = request.POST.get('contract_type')
-    obj_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d')
-    start_date = obj_start_date.strftime("%d-%m-%Y")
+    number = validated_data['number']
+    job_title = validated_data['job_title']
+    salary = validated_data['salary']
+    contract_type = validated_data['contract_type']
+    start_date = str(validated_data['start_date'].day) + '-' + str(validated_data['start_date'].month) + '-' + \
+                 str(validated_data['start_date'].year)
 
     if contract_type == 'perpetual':
         startDateWordMonth = Date_conversion(start_date, 'word_month')
         date_content = f' и является бессрочным Дата начала работы по настоящему Договору: {startDateWordMonth}'
     else:
         startDateWordMonth = Date_conversion(start_date, 'word_month')
-        obj_end_date = datetime.strptime(request.POST.get('end_date_urgent'), '%Y-%m-%d')
-        endDateWordMonth = Date_conversion(obj_end_date.strftime("%d-%m-%Y"), 'word_month')
-        cause = request.POST.get('cause')
+        end_date = str(validated_data['start_date'].day) + '-' + str(validated_data['start_date'].month) + '-' + \
+                     str(validated_data['start_date'].year)
+        endDateWordMonth = Date_conversion(end_date, 'word_month')
+        cause = validated_data['cause']
         date_content = f'. Настоящий трудовой договор является срочным, заключается на срок {startDateWordMonth} по {endDateWordMonth} Обстоятельства (причины), послужившие основанием для заключения срочного трудового договора, - {cause}'
 
-    start_time = request.POST.get('start_time')
+    start_time = validated_data['start_time']
     if start_time[0] == "0":
         start_time = start_time[1:]
-    end_time = request.POST.get('end_time')
+    end_time = validated_data('end_time')
     if end_time[0] == "0":
         end_time = end_time[1:]
 
