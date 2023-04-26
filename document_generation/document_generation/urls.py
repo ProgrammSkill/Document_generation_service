@@ -14,9 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
 urlpatterns = [
@@ -24,6 +26,11 @@ urlpatterns = [
     # OpenAPI 3
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
+    path('api/document_generation/', include("document_generation_app.api.urls")),
     # path("api-auth/", include('rest_framework.urls')),
     path("", include('document_generation_app.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+                  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + urlpatterns
