@@ -4,5 +4,8 @@ from . import views
 
 
 urlpatterns = [
-    path('test/', views.TestView.as_view())    
+    path('employment_contract/', views.EmploymentContractAPIView.as_view()),
+    path('gpc_contract/', views.GPCContractAPIView.as_view()),
+    path('removal_older/', views.RemovalOrderAPIView.as_view()),
+    path('payment_order_for_advance_payment/', views.GenerationPaymentOrderForAdvancePaymentIView.as_view())
 ]
