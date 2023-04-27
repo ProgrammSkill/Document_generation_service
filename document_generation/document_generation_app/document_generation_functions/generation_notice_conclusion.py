@@ -1,13 +1,12 @@
 import os
-from datetime import datetime
 from openpyxl import *
-import pytz
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
-from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
+from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, \
+    Date_conversion, Get_path_file
 
 path_file = Get_path_file()
 
-def Generation_notice_conclusion(request):
+def Generation_notice_conclusion(validated_data):
     company = CompanyAPI()
     organization = company["organizationalForm"] + ' "' + company["name"] + '"'
     list_organization = list(organization.upper())
@@ -29,16 +28,15 @@ def Generation_notice_conclusion(request):
     # passport_series = 'AC'.upper()
     # passport_number = '4348554'.upper()
 
-    name = request.POST.get('name').upper()
+    name = validated_data['name'].upper()
     list_name = list(name)
-    job_title = request.POST.get('job_title').upper()
+    job_title = validated_data['job_title'].upper()
     list_job = list(job_title)
-    base = request.POST.get('base')
-    obj_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d')
-    start_date = obj_start_date.strftime("%d-%m-%Y")
-    address = request.POST.get('address').upper()
+    base = validated_data['base']
+    start_date = validated_data['start_date']
+    address = validated_data['address'].upper()
     list_address = list(address)
-    person = request.POST.get('person')
+    person = validated_data['person']
 
     path_file_doc = 'document_generation_app/document_templates/notice_conclusion.xlsx'
     doc = load_workbook(path_file_doc)
@@ -137,6 +135,7 @@ def Generation_notice_conclusion(request):
     elif base == 'Гражданско-правовой договор на выполнение работ (оказание услуг)':
         sheet['W167'] = 'X'
 
+    start_date = Date_conversion_from_obj_date(start_date)
     start_date = Date_conversion(start_date)
     arr_date = start_date.split('.')
     # day
@@ -172,12 +171,11 @@ def Generation_notice_conclusion(request):
 
     if person == 'person_proxy':
         try:
-            full_name = request.POST.get('full_name')
-            passportSeries = request.POST.get('series')
-            passportNumber = request.POST.get('number')
-            obj_date_issue = datetime.strptime(request.POST.get('date_issue'), '%Y-%m-%d')
-            date_issue = obj_date_issue.strftime("%d-%m-%Y")
-            issued_by = request.POST.get('issued_by')
+            full_name = validated_data['full_name']
+            passportSeries = validated_data['series']
+            passportNumber = validated_data['number']
+            date_issue = validated_data['date_issue']
+            issued_by = validated_data['issued_by']
 
             sheet["AE201"] = full_name
             passportSeries = passportSeries[0] + passportSeries[1] + ' ' + passportSeries[2] + passportSeries[3]

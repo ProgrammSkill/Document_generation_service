@@ -7,7 +7,7 @@ from document_generation_app.document_generation_functions.functions import Date
 
 path_file = Get_path_file()
 
-def Generation_generation_right_not_to_withhold_pit(request):
+def Generation_generation_right_not_to_withhold_pit(validated_data):
     company = CompanyAPI()
     organization = company["organizationalForm"] + ' "' + company["name"] + '"'
     list_organization = list(organization.upper())
@@ -29,7 +29,7 @@ def Generation_generation_right_not_to_withhold_pit(request):
     # passport_series = 'AC'.upper()
     # passport_number = '4348554'.upper()
 
-    code = request.POST.get('code')
+    code = validated_data['code']
     list_code = list(code)
 
     path_file_doc = 'document_generation_app/document_templates/right_not_to_withhold_pit.xlsx'

@@ -2,12 +2,11 @@ import os
 import requests
 from django.shortcuts import render, redirect
 from docxtpl import DocxTemplate
-from win32com.shell import shell, shellcon
 from datetime import datetime
 import pytz
 from number_to_string import get_string_by_number
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
-from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
+from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, Date_conversion, Get_path_file
 
 path_file = Get_path_file()
 
@@ -33,29 +32,26 @@ def Generation_employment_contract_document(validated_data):
     job_title = validated_data['job_title']
     salary = validated_data['salary']
     contract_type = validated_data['contract_type']
-    start_date = str(validated_data['start_date'].day) + '-' + str(validated_data['start_date'].month) + '-' + \
-                 str(validated_data['start_date'].year)
+    start_date = Date_conversion_from_obj_date(validated_data['start_date'])
 
     if contract_type == 'perpetual':
         startDateWordMonth = Date_conversion(start_date, 'word_month')
         date_content = f' и является бессрочным Дата начала работы по настоящему Договору: {startDateWordMonth}'
     else:
         startDateWordMonth = Date_conversion(start_date, 'word_month')
-        end_date = str(validated_data['start_date'].day) + '-' + str(validated_data['start_date'].month) + '-' + \
-                     str(validated_data['start_date'].year)
+        end_date = Date_conversion_from_obj_date(validated_data['end_date'])
         endDateWordMonth = Date_conversion(end_date, 'word_month')
         cause = validated_data['cause']
         date_content = f'. Настоящий трудовой договор является срочным, заключается на срок {startDateWordMonth} по {endDateWordMonth} Обстоятельства (причины), послужившие основанием для заключения срочного трудового договора, - {cause}'
 
-    start_time = validated_data['start_time']
+    start_time = str(validated_data['start_time'])
     if start_time[0] == "0":
         start_time = start_time[1:]
-    end_time = validated_data('end_time')
+    end_time = str(validated_data['end_date_urgent'])
     if end_time[0] == "0":
         end_time = end_time[1:]
 
     textSalary = get_string_by_number(salary).replace(' рублей 00 копеек', '', 1)
-    print(textSalary)
     path_file_doc = 'document_generation_app/document_templates/employment_contract.docx'
     doc = DocxTemplate(path_file_doc)
 

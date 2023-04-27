@@ -1,7 +1,22 @@
-import os
 from win32com.shell import shell, shellcon
+
 def Get_path_file():
     return shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
+
+def Date_conversion_from_obj_date(validated_date):
+    if validated_date.day < 9:
+        day = '0' + str(validated_date.day)
+    else:
+        day = str(validated_date.day)
+
+    if validated_date.day < 9:
+        month = '0' + str(validated_date.month)
+    else:
+        month = str(validated_date.month)
+
+    year = str(validated_date.year)
+
+    return day + '-' + month + '-' + year
 
 def Date_conversion(date, type=None):
     arr_date = date.split('-')

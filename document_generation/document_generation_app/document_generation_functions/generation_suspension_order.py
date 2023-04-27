@@ -2,11 +2,12 @@ import os
 from docxtpl import DocxTemplate
 from datetime import datetime
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
-from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
+from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, \
+    Date_conversion, Get_path_file
 
 path_file = Get_path_file()
 
-def Generation_removal_older(request):
+def Generation_suspension_order(validated_data):
     company = CompanyAPI()
     organization = company["organizationalForm"] + ' "' + company["name"] + '"'
     phone = company["contactInfo"]["phone"]
@@ -23,9 +24,8 @@ def Generation_removal_older(request):
     passport_series = 'AC'
     passport_number = '4348554'
 
-    number = request.POST.get('number')
-    obj_start_date = datetime.strptime(request.POST.get('start_date'), '%Y-%m-%d')
-    start_date = obj_start_date.strftime("%d-%m-%Y")
+    number = validated_data['number']
+    start_date = Date_conversion_from_obj_date(validated_data['start_date'])
 
     path_file_doc = 'document_generation_app/document_templates/removal_order.docx'
     doc = DocxTemplate(path_file_doc)
@@ -51,13 +51,13 @@ def Generation_removal_older(request):
 
     global path_file
     path = path_file
-    if os.path.exists(path + '/' + 'removal_order.docx') == False:
-        doc.save(path + '/' + 'removal_order.docx')
+    if os.path.exists(path + '/' + 'suspension_order.docx') == False:
+        doc.save(path + '/' + 'suspension_order .docx')
     else:
         i = 1
         while True:
-            if os.path.exists(path_file + '/' + f'removal_order{i}.docx') == False:
-                path = path_file + '/' + f'removal_order{i}.docx'
+            if os.path.exists(path_file + '/' + f'suspension_order{i}.docx') == False:
+                path = path_file + '/' + f'suspension_order{i}.docx'
                 doc.save(path)
                 break
             i += 1
