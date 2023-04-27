@@ -93,32 +93,3 @@ def Generate_Payment_order_for_advance_payment(request):
     if request.method == 'POST':
         Generate_Generation_payment_order_for_advance_payment(request)
     return redirect('payment_order_for_advance_payment')
-
-
-# {
-#     "id": "1fa85f64-1727-4862-b3fc-2c963f66afa4",
-#     "inn": "7804525530",
-#     "kpp": "780401001",
-#     "name": "Капитал Кадры",
-#     "organizationalForm": "ООО",
-#     "ogrn": "1117746358608",
-#     "okved": "123456",
-#     "legalAddress": {
-#         "name": "195299, Г.Санкт-Петербург, пр-кт Гражданский, д. 119 ЛИТЕР А, офис 8"
-#     },
-#     "contactInfo": {
-#         "id": 0,
-#         "name": "Олег",
-#         "phone": "+78989321223",
-#         "email": "user@example.com"
-#     },
-#     "bank": {
-#         "id": 0,
-#         "bankId": "123456789",
-#         "correspondentAccount": "12345123451234512345",
-#         "paymentAccount": "12345123451234512345"
-#     },
-#     "ActualAddreses": [
-#         {"name": "195299, Г.Санкт-Петербург, пр-кт Гражданский, д. 119 ЛИТЕР А, офис 8"}
-#     ]
-# }
