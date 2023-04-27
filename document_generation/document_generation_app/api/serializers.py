@@ -28,7 +28,6 @@ class SerializersRemovalOrder(serializers.Serializer):
     start_date = serializers.DateField(write_only=True)
 
     def create(self, validated_data):
-        print(validated_data)
         return validated_data
 
 
@@ -37,21 +36,6 @@ class SerializersGenerationPaymentOrderForAdvancePayment(serializers.Serializer)
 
     def create(self, validated_data):
         Generation_payment_order_for_advance_payment(validated_data)
-        return validated_data
-
-class SerializersEmploymentContract(serializers.Serializer):
-    number = serializers.CharField(write_only=True, max_length=10)
-    job_title = serializers.CharField(write_only=True, max_length=30)
-    salary = serializers.IntegerField(write_only=True)
-    urgent = serializers.CharField(write_only=True, max_length=50)
-    start_date = serializers.DateField(write_only=True)
-    end_date_urgent = serializers.DateField()
-    cause = serializers.CharField()
-    start_time = serializers.TimeField(write_only=True)
-    ends_time = serializers.TimeField(write_only=True)
-
-    def create(self, validated_data):
-        Generation_employment_contract_document(validated_data)
         return validated_data
 
 class SerializersEmploymentContract(serializers.Serializer):
