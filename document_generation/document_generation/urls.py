@@ -27,10 +27,10 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('api/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/document_generation/', include("document_generation_app.api.urls")),
-    # path("api-auth/", include('rest_framework.urls')),
+    # urls app
     path("", include('document_generation_app.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
-                  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + urlpatterns
+# if settings.DEBUG:
+#     urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) \
+#                   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + urlpatterns
