@@ -118,90 +118,88 @@ dict_patent_cost = [
 ]
 
 
-def Generate_Generation_payment_order_for_advance_payment(request):
-    if request.method == 'POST':
+def Generation_payment_order_for_advance_payment(validated_data):
+    company = CompanyAPI()
+    organization = company["organizationalForm"] + ' "' + company["name"] + '"'
+    organization_inn = company['inn']
+    organization_kpp = company['kpp']
+    ogrn_organization = company['ogrn']
+    paymentAccount_organization = company['bank']['paymentAccount']
+    correspondentAccount = company['bank']['correspondentAccount']
 
-        company = CompanyAPI()
-        organization = company["organizationalForm"] + ' "' + company["name"] + '"'
-        organization_inn = company['inn']
-        organization_kpp = company['kpp']
-        ogrn_organization = company['ogrn']
-        paymentAccount_organization = company['bank']['paymentAccount']
-        correspondentAccount = company['bank']['correspondentAccount']
+    individual = IndividualAPI()
+    surname = individual['surname']
+    name = individual['name']
+    patronymic = individual['patronymic']
 
-        individual = IndividualAPI()
-        surname = individual['surname']
-        name = individual['name']
-        patronymic = individual['patronymic']
+    if patronymic != None and patronymic != '':
+        full_name = surname + ' ' + name + ' ' + patronymic
+    else:
+        full_name = surname + ' ' + name
 
-        if patronymic != None and patronymic != '':
-            full_name = surname + ' ' + name + ' ' + patronymic
-        else:
-            full_name = surname + ' ' + name
+    individual_inn = individual['inn']
+    individual_kpp = individual['kpp']
+    expiration_date = individual['patent']['expiration_date']
+    expiration_date = datetime.strptime(expiration_date, '%Y-%m-%d')
+    number_months = int(validated_data['number_months'])
+    territory_of_action = individual['patent']['territory_of_action']
 
-        individual_inn = individual['inn']
-        individual_kpp = individual['kpp']
-        expiration_date = individual['patent']['expiration_date']
-        expiration_date = datetime.strptime(expiration_date, '%Y-%m-%d')
-        number_months = int(request.POST.get('number_months'))
-        territory_of_action = individual['patent']['territory_of_action']
+    sum = 0
+    for obj in dict_patent_cost:
+        print(obj)
+        if obj['region'] == territory_of_action:
+            sum = obj['price'] * number_months
+            break
 
-        sum = 0
-        for obj in dict_patent_cost:
-            print(obj)
-            if obj['region'] == territory_of_action:
-                sum = obj['price'] * number_months
+    textSum = get_string_by_number(sum)
+    sum = str(sum)
+    if len(sum) == 4:
+        sum = sum.replace(f'{sum[0]}', f'{sum[0]} ', 1)
+    elif len(sum) == 5:
+        sum = sum.replace(f'{sum[0] + sum[1]}', f'{sum[0] + sum[1]} ', 1)
+    elif len(sum) == 6:
+        sum = sum.replace(f'{sum[0] + sum[1] + sum[2]}', f'{sum[0] + sum[1] + sum[2]} ', 1)
+    sum = sum + '-00'
+
+
+    renewal_date = expiration_date + relativedelta(months=number_months)
+    renewal_date = Date_conversion(renewal_date.strftime("%d-%m-%Y"))
+
+    expiration_date = Date_conversion(expiration_date.strftime("%d-%m-%Y"))
+    period = str(expiration_date) + ' - ' + str(renewal_date)
+
+    now_date = datetime.now(pytz.timezone('UTC'))
+    now_date = now_date.strftime('%d-%m-%Y')
+
+    path_file_doc = 'document_generation_app/document_templates/generation_payment_order_for_advance_payment.docx'
+    doc = DocxTemplate(path_file_doc)
+
+    context = {
+        'nowDate': Date_conversion(now_date),
+        'organization': organization,
+        'organizationINN': organization_inn,
+        'organizationKPP': organization_kpp,
+        'paymentAccountOrganization': paymentAccount_organization,
+        'fullName': full_name,
+        'individualINN': individual_inn,
+        'individualKPP': individual_kpp,
+        'sum': sum,
+        'textSum': textSum,
+        'period': period,
+        'individual': individual
+    }
+
+    doc.render(context)
+
+    global path_file
+    path = path_file
+    if os.path.exists(path + '/' + 'generation_payment_order_for_advance_payment.docx') == False:
+        doc.save(path + '/' + 'generation_payment_order_for_advance_payment.docx')
+    else:
+        i = 1
+        while True:
+            if os.path.exists(path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx') == False:
+                path = path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx'
+                doc.save(path)
                 break
-
-        textSum = get_string_by_number(sum)
-        sum = str(sum)
-        if len(sum) == 4:
-            sum = sum.replace(f'{sum[0]}', f'{sum[0]} ', 1)
-        elif len(sum) == 5:
-            sum = sum.replace(f'{sum[0] + sum[1]}', f'{sum[0] + sum[1]} ', 1)
-        elif len(sum) == 6:
-            sum = sum.replace(f'{sum[0] + sum[1] + sum[2]}', f'{sum[0] + sum[1] + sum[2]} ', 1)
-        sum = sum + '-00'
-
-
-        renewal_date = expiration_date + relativedelta(months=number_months)
-        renewal_date = Date_conversion(renewal_date.strftime("%d-%m-%Y"))
-
-        expiration_date = Date_conversion(expiration_date.strftime("%d-%m-%Y"))
-        period = str(expiration_date) + ' - ' + str(renewal_date)
-
-        now_date = datetime.now(pytz.timezone('UTC'))
-        now_date = now_date.strftime('%d-%m-%Y')
-
-        path_file_doc = 'document_generation_app/document_templates/generation_payment_order_for_advance_payment.docx'
-        doc = DocxTemplate(path_file_doc)
-
-        context = {
-            'nowDate': Date_conversion(now_date),
-            'organization': organization,
-            'organizationINN': organization_inn,
-            'organizationKPP': organization_kpp,
-            'paymentAccountOrganization': paymentAccount_organization,
-            'fullName': full_name,
-            'individualINN': individual_inn,
-            'individualKPP': individual_kpp,
-            'sum': sum,
-            'textSum': textSum,
-            'period': period,
-            'individual': individual
-        }
-
-        doc.render(context)
-
-        global path_file
-        path = path_file
-        if os.path.exists(path + '/' + 'generation_payment_order_for_advance_payment.docx') == False:
-            doc.save(path + '/' + 'generation_payment_order_for_advance_payment.docx')
-        else:
-            i = 1
-            while True:
-                if os.path.exists(path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx') == False:
-                    path = path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx'
-                    doc.save(path)
-                    break
-                i += 1
+            i += 1
