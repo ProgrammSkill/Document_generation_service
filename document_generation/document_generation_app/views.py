@@ -8,7 +8,7 @@ from win32com.shell import shell, shellcon
 def index(request):
     return render(request, 'document_generation_app/index.html')
 
-def Employment_contract_Document(request):
+def Employment_contract(request):
     return render(request, 'document_generation_app/employment_contract.html')
 
 
@@ -16,8 +16,8 @@ def GPC_Agreement(request):
     return render(request, 'document_generation_app/gpc_contract.html')
 
 
-def Removal_order(request):
-    return render(request, 'document_generation_app/removal_order.html')
+def Suspension_order(request):
+    return render(request, 'document_generation_app/suspension_order.html')
 
 
 def Notice_conclusion(request):
@@ -32,8 +32,8 @@ def Right_not_to_withhold_pit(request):
     return render(request, 'document_generation_app/right_not_to_withhold_pit.html')
 
 
-def About_arrival(request):
-    return render(request, 'document_generation_app/about_arrival.html')
+def Arrival_notice(request):
+    return render(request, 'document_generation_app/arrival_notice.html')
 
 
 def Payment_order_for_advance_payment(request):

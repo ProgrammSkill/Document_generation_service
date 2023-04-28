@@ -6,7 +6,7 @@ from document_generation_app.document_generation_functions.functions import Date
 
 path_file = Get_path_file()
 
-def Generation_termination_notice(request):
+def Generation_termination_notice(validated_data):
     company = CompanyAPI()
     organization = company["organizationalForm"] + ' "' + company["name"] + '"'
     list_organization = list(organization.upper())
@@ -28,15 +28,16 @@ def Generation_termination_notice(request):
     # passport_series = 'AC'.upper()
     # passport_number = '4348554'.upper()
 
-    name = request.POST.get('name').upper()
+    name = validated_data['name'].upper()
     list_name = list(name)
-    job_title = request.POST.get('job_title').upper()
+    job_title = validated_data['job_title'].upper()
     list_job = list(job_title)
-    base = request.POST.get('base')
-    obj_end_date = datetime.strptime(request.POST.get('end_date'), '%Y-%m-%d')
-    end_date = obj_end_date.strftime("%d-%m-%Y")
-    initiator = request.POST.get('initiator')
-    person = request.POST.get('person')
+    base = validated_data['base']
+    end_date = str(validated_data['end_date'].day) + '-' + str(validated_data['end_date'].month) + '-' + \
+                 str(validated_data['end_date'].year)
+    end_date = end_date
+    initiator = validated_data['initiator']
+    person = validated_data['person']
 
     path_file_doc = 'document_generation_app/document_templates/termination_notice.xlsx'
     doc = load_workbook(path_file_doc)
@@ -139,6 +140,7 @@ def Generation_termination_notice(request):
 
     end_date = Date_conversion(end_date)
     arr_date = end_date.split('.')
+    # print(arr_date)
     # day
     sheet['AX167'] = arr_date[0][0]
     sheet['AZ167'] = arr_date[0][1]
@@ -160,15 +162,17 @@ def Generation_termination_notice(request):
 
     if person == 'person_proxy':
         try:
-            full_name = request.POST.get('full_name')
-            passportSeries = request.POST.get('series')
-            passportNumber = request.POST.get('number')
-            obj_date_issue = datetime.strptime(request.POST.get('date_issue'), '%Y-%m-%d')
-            date_issue = obj_date_issue.strftime("%d-%m-%Y")
-            issued_by = request.POST.get('issued_by')
+            full_name = validated_data['full_name']
+            passportSeries = validated_data['series']
+            passportNumber = validated_data['number']
+            date_issue = str(validated_data['date_issue'].day) + '-' + str(validated_data['date_issue'].month) + '-' + \
+                         str(validated_data['date_issue'].year)
+            date_issue = date_issue
+            issued_by = validated_data['issued_by']
 
             sheet["AE193"] = full_name
-            passportSeries = passportSeries[0] + passportSeries[1] + ' ' + passportSeries[2] + passportSeries[3]
+            if len(passportSeries) == 4:
+                passportSeries = passportSeries[0] + passportSeries[1] + ' ' + passportSeries[2] + passportSeries[3]
             sheet["G195"] = passportSeries
             sheet["X195"] = passportNumber
             sheet["AR195"] = Date_conversion(date_issue)
