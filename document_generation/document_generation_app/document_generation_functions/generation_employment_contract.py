@@ -1,12 +1,9 @@
 import os
-import requests
-from django.shortcuts import render, redirect
 from docxtpl import DocxTemplate
-from datetime import datetime
-import pytz
 from number_to_string import get_string_by_number
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
-from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, Date_conversion, Get_path_file
+from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, \
+    Date_conversion, Get_path_file, SurnameDeclension, FirstNameDeclension, LastNameDeclension
 
 path_file = Get_path_file()
 
@@ -20,13 +17,26 @@ def Generation_employment_contract_document(validated_data):
     ogrn = company['ogrn']
     paymentAccount = company['bank']['paymentAccount']
     correspondentAccount = company['bank']['correspondentAccount']
-    legalAddress = company['legalAddress']["name"]
-    ActualAddreses = company['ActualAddreses'][0]["name"]
-    CEO = 'Сталюковой Екатерина Александровны'
+    city = company['legalAddress']["city"]
+    legalAddress = city + ' г, ' + company['legalAddress']["street"] + ', ' + company['legalAddress']["house"]
+    ActualAddreses = 'dfsds'
+    # ActualAddreses = company['ActualAddreses'][0]["city"]
+    first_name_CEO = 'Екатерина'
+    surname_CEO = 'Сталюкова'
+    last_name_CEO = 'Александровна'
+    CEO = surname_CEO + ' ' + first_name_CEO + ' ' + last_name_CEO
+    surname_CEO = SurnameDeclension(surname_CEO)
+    CEO_declension = surname_CEO + ' ' + first_name_CEO[0] + '.' + last_name_CEO[0] + '.'
 
-    individual = 'Гайназаров Кайратбек'
-    passport_series = 'AC'
-    passport_number = '4348554'
+    individual = IndividualAPI()
+    surname = individual['fio']['secondName']
+    name = individual['fio']['firstName']
+    patronymic = individual['fio']['patronymic']
+
+    if patronymic != None and patronymic != '':
+        full_name_worker = surname + ' ' + name + ' ' + patronymic
+    else:
+        full_name_worker = surname + ' ' + name
 
     number = validated_data['number']
     job_title = validated_data['job_title']
@@ -39,7 +49,7 @@ def Generation_employment_contract_document(validated_data):
         date_content = f' и является бессрочным Дата начала работы по настоящему Договору: {startDateWordMonth}'
     else:
         startDateWordMonth = Date_conversion(start_date, 'word_month')
-        end_date = Date_conversion_from_obj_date(validated_data['end_date'])
+        end_date = Date_conversion_from_obj_date(validated_data['end_date_urgent'])
         endDateWordMonth = Date_conversion(end_date, 'word_month')
         cause = validated_data['cause']
         date_content = f'. Настоящий трудовой договор является срочным, заключается на срок {startDateWordMonth} по {endDateWordMonth} Обстоятельства (причины), послужившие основанием для заключения срочного трудового договора, - {cause}'
@@ -70,12 +80,14 @@ def Generation_employment_contract_document(validated_data):
         'inn': inn,
         'kpp': kpp,
         'phone': phone,
+        'city': city,
         'legalAddress': legalAddress,
         'ActualAddreses': ActualAddreses,
         'paymentAccount': paymentAccount,
         'correspondentAccount': correspondentAccount,
+        'ceoDeclension': CEO_declension,
         'CEO': CEO,
-        'individual': individual
+        'fullName': full_name_worker
     }
 
     doc.render(context)

@@ -4,7 +4,7 @@
 
 <h2 class="p-4">Уведомление о расторжении</h2>
 
-<form action="{% url 'termination_notice_generation' %}" id="form_document" method="post" class="p-5">
+<form action="" id="form_document" method="post" class="p-5">
     {% csrf_token %}
 
     <div class="mb-3 form-group col-lg-8 position-relative">
@@ -20,7 +20,7 @@
     <div class="mb-3 form-group col-lg-4 position-relative">
         <label for="base" class="form-label">Договор на основании которого осуществляется трудовая деятельность иностранного гражданина (лицом без гражданства)</label>
             <select id="base" name="base">
-                <option value="Трудовой договор<">Трудовой договор</option>
+                <option value="Трудовой договор">Трудовой договор</option>
                 <option value="Гражданско-правовой договор на выполнение работ (оказание услуг)">Гражданско-правовой договор на выполнение работ (оказание услуг)</option>
         </select>
     </div>

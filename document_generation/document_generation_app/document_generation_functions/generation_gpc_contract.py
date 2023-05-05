@@ -2,7 +2,12 @@ import os
 from docxtpl import DocxTemplate
 from datetime import datetime
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
-from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
+from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file, \
+    SurnameDeclension, FirstNameDeclension, LastNameDeclension
+# from morpher2 import russian as mr
+import pymorphy2
+from petrovich.main import Petrovich
+from petrovich.enums import Case, Gender
 
 path_file = Get_path_file()
 
@@ -10,18 +15,26 @@ def Generation_GPH_contract(validated_data):
     company = CompanyAPI()
     paymentAccount_organization = company['bank']['paymentAccount']
     organization = company["organizationalForm"] + " " + company["name"]
-    legalAddress = company['legalAddress']["name"]
+    city = company['legalAddress']["city"]
+    legalAddress = city + ' г, ' + company['legalAddress']["street"] + ', ' + company['legalAddress']["house"]
     organization_inn = company['inn']
     organization_kpp = company['kpp']
     organization_ogrn = company['ogrn']
 
-    CEO = 'Сталюковой Екатерина Александровны'
+    first_name_CEO = 'Екатерина'
+    surname_CEO = 'Сталюкова'
+    last_name_CEO = 'Александровна'
+    CEO = surname_CEO + ' ' + first_name_CEO + ' ' + last_name_CEO
+    first_name_CEO = FirstNameDeclension(first_name_CEO)
+    surname_CEO = SurnameDeclension(surname_CEO)
+    last_name_CEO = LastNameDeclension(last_name_CEO)
+    CEO_declension = surname_CEO + ' ' + first_name_CEO + ' ' + last_name_CEO
 
     individual = IndividualAPI()
-    surname = individual['surname']
-    name = individual['name']
-    patronymic = individual['patronymic']
-    passportSeries = individual['passport']['series']
+    surname = individual['fio']['secondName']
+    name = individual['fio']['firstName']
+    patronymic = individual['fio']['patronymic']
+    passportSeries = individual['passport']['serias']
     passportNumber = individual['passport']['number']
     temporary_registration = individual['temporary_registration']
 
@@ -51,7 +64,9 @@ def Generation_GPH_contract(validated_data):
         'endDate': end_date,
         'address': address,
         'organization': organization,
+        'city': city,
         'legalAddress': legalAddress,
+        'ceoDeclension': CEO_declension,
         'CEO': CEO,
         'organizationINN': organization_inn,
         'organizationKPP': organization_kpp,

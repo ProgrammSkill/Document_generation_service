@@ -1,8 +1,10 @@
 import os
 from datetime import datetime
 from openpyxl import *
+import re
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
-from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
+from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, \
+    Date_conversion, Get_path_file
 
 path_file = Get_path_file()
 
@@ -19,24 +21,26 @@ def Generation_termination_notice(validated_data):
     list_ogrn = list('ОГРН ' + ogrn)
     paymentAccount = company['bank']['paymentAccount'].upper()
     correspondentAccount = company['bank']['correspondentAccount'].upper()
-    legalAddress = company['legalAddress']["name"].upper()
-    list_legalAddress = list(legalAddress)
-    ActualAddreses = company['ActualAddreses'][0]["name"].upper()
+    legalAddress = company['legalAddress']["city"] + ' г, ' + company['legalAddress']["street"] + ', ' + \
+                   company['legalAddress']["house"]
+    list_legalAddress = list(legalAddress.upper())
     CEO = 'Сталюкова Екатерина Александровна'
 
-    individual = 'Гайназаров Кайратбек'.upper()
-    # passport_series = 'AC'.upper()
-    # passport_number = '4348554'.upper()
+    individual = IndividualAPI()
+    surname = individual['fio']['secondName']
+    first_name = individual['fio']['firstName']
+    patronymic = individual['fio']['patronymic']
+    citizenship = individual['citizenship']
+
 
     name = validated_data['name'].upper()
     list_name = list(name)
     job_title = validated_data['job_title'].upper()
     list_job = list(job_title)
     base = validated_data['base']
-    end_date = str(validated_data['end_date'].day) + '-' + str(validated_data['end_date'].month) + '-' + \
-                 str(validated_data['end_date'].year)
-    end_date = end_date
+    end_date = validated_data['end_date']
     initiator = validated_data['initiator']
+    print(initiator)
     person = validated_data['person']
 
     path_file_doc = 'document_generation_app/document_templates/termination_notice.xlsx'
@@ -119,6 +123,102 @@ def Generation_termination_notice(validated_data):
             index += 1
             break
 
+    list_columns_for_full_name = ['O', 'Q', 'S', 'U', 'W', 'Y', 'AA', 'AC', 'AE', 'AG', 'AI',
+                    'AK', 'AM', 'AO', 'AQ', 'AS', 'AU', 'AW', 'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO',
+                    'BQ']
+    list_first_name = list(first_name.upper())
+    row = 90
+    index = 0
+    stop = False
+    for symbol in list_first_name:
+        for col in range(index, len(list_columns_for_full_name)):
+            cell = list_columns_for_full_name[index] + str(row)
+            sheet[f'{cell}'] = symbol
+            index += 1
+            if col == 'BQ':
+                stop = True
+            break
+        if stop == True:
+            break
+
+    list_surname = list(surname.upper())
+    row = 92
+    index = 0
+    stop = False
+    for symbol in list_surname:
+        for col in range(index, len(list_columns_for_full_name)):
+            cell = list_columns_for_full_name[index] + str(row)
+            sheet[f'{cell}'] = symbol
+            index += 1
+            if col == 'BQ':
+                stop = True
+            break
+        if stop == True:
+            break
+
+    if patronymic != None and patronymic != '':
+        list_patronymic = list(patronymic.upper())
+        row = 94
+        index = 0
+        stop = False
+        for symbol in list_patronymic:
+            for col in range(index, len(list_columns_for_full_name)):
+                cell = list_columns_for_full_name[index] + str(row)
+                sheet[f'{cell}'] = symbol
+                index += 1
+                if col == 'BQ':
+                    stop = True
+                break
+            if stop == True:
+                break
+
+    list_citizenship = citizenship.upper()
+    list_columns_for_citizenship = ['Q', 'S', 'U', 'W', 'Y', 'AA', 'AC', 'AE', 'AG', 'AI',
+                    'AK', 'AM', 'AO', 'AQ', 'AS', 'AU', 'AW', 'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO',
+                    'BQ']
+    row = 97
+    index = 0
+    stop = False
+    for symbol in list_citizenship:
+        for col in range(index, len(list_columns_for_citizenship)):
+            cell = list_columns_for_citizenship[index] + str(row)
+            sheet[f'{cell}'] = symbol
+            index += 1
+            if col == 'BQ':
+                stop = True
+            break
+        if stop == True:
+            break
+
+    birthday = individual['birthday']
+    birthday = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", birthday).group(1)
+    list_birthday = birthday.split('-')
+    #day
+    sheet['R104'],  sheet['T104'] = list_birthday[2][0], list_birthday[2][1]
+    #month
+    sheet['W104'], sheet['Y104'] = list_birthday[1][0], list_birthday[1][1]
+    #year
+    sheet['AB104'], sheet['AD104'] = list_birthday[0][0], list_birthday[0][1]
+    sheet['AF104'], sheet['AH104'] = list_birthday[0][2], list_birthday[0][3]
+
+    citizenship = individual['citizenship']
+    if citizenship == 'Киргизия' or citizenship == 'Армения' or citizenship == 'Казахстан' or citizenship == 'Беларусь':
+        name_international_agreement = "П. 1, СТАТЬИ 97, ДОГОВОРА О ЕВРАЗИЙСКОМ ЭКОНОМИЧЕСКОМ СОЮЗЕ ОТ 29.05.2014 (В РЕД. ОТ 08.05.2015)"
+        list_international_agreement = list(name_international_agreement)
+        row = 140
+        index = 0
+        for symbol in list_international_agreement:
+            for col in range(index, len(list_columns)):
+                cell = list_columns[index] + str(row)
+                if list_columns[index] == 'BQ':
+                    sheet[f'{cell}'] = symbol
+                    row += 2
+                    index = 0
+                    break
+                sheet[f'{cell}'] = symbol
+                index += 1
+                break
+
     row = 151
     index = 0
     for symbol in list_job:
@@ -138,6 +238,7 @@ def Generation_termination_notice(validated_data):
     elif base == 'Гражданско-правовой договор на выполнение работ (оказание услуг)':
         sheet['W161'] = 'X'
 
+    end_date = Date_conversion_from_obj_date(end_date)
     end_date = Date_conversion(end_date)
     arr_date = end_date.split('.')
     # print(arr_date)
@@ -154,9 +255,9 @@ def Generation_termination_notice(validated_data):
     sheet['BN167'] = arr_date[2][3]
 
     if initiator == 'yes':
-        sheet['A174'] = 'X'
+        sheet['E174'] = 'X'
     else:
-        sheet['W174'] = 'X'
+        sheet['M174'] = 'X'
 
     sheet['AK183'] = CEO
 

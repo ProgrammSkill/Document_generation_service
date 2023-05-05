@@ -125,25 +125,23 @@ def Generation_payment_order_for_advance_payment(validated_data):
     correspondentAccount = company['bank']['correspondentAccount']
 
     individual = IndividualAPI()
-    surname = individual['surname']
-    name = individual['name']
-    patronymic = individual['patronymic']
+    surname = individual['fio']['secondName']
+    firstName = individual['fio']['firstName']
+    patronymic = individual['fio']['patronymic']
 
     if patronymic != None and patronymic != '':
-        full_name = surname + ' ' + name + ' ' + patronymic
+        full_name = surname + ' ' + firstName + ' ' + patronymic
     else:
-        full_name = surname + ' ' + name
+        full_name = surname + ' ' + firstName
 
     individual_inn = individual['inn']
-    individual_kpp = individual['kpp']
-    expiration_date = individual['patent']['expiration_date']
+    expiration_date = individual['patent']['dateEnd']
     expiration_date = datetime.strptime(expiration_date, '%Y-%m-%d')
     number_months = int(validated_data['number_months'])
-    territory_of_action = individual['patent']['territory_of_action']
+    territory_of_action = individual['patent']['area']
 
     sum = 0
     for obj in dict_patent_cost:
-        print(obj)
         if obj['region'] == territory_of_action:
             sum = obj['price'] * number_months
             break
@@ -179,7 +177,7 @@ def Generation_payment_order_for_advance_payment(validated_data):
         'paymentAccountOrganization': paymentAccount_organization,
         'fullName': full_name,
         'individualINN': individual_inn,
-        'individualKPP': individual_kpp,
+        'individualKPP': organization_kpp,
         'sum': sum,
         'textSum': textSum,
         'period': period,

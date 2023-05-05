@@ -39,3 +39,53 @@ def Date_conversion(date, type=None):
         date = day + '.' + arr_date[1] + '.' + year
 
     return date
+
+def FirstNameDeclension(first_name):
+    ending = first_name[len(first_name) - 1]
+
+    # FEMALE
+    if ending == 'а':
+        ending = 'ы'
+    elif ending == 'я' or first_name[len(first_name) - 2] + ending == 'ль':
+        ending = 'и'
+    elif ending == 'т':
+        ending = 'ты'
+    # MALE
+    elif ending == 'н' or ending == 'к' or ending == 'т' or ending == 'д' or ending == 'с' or ending == 'г' or \
+            ending == 'м' or ending == 'р' or ending == 'в' or ending == 'б' or ending == 'л':
+        ending = 'а'
+        return first_name + ending
+    elif ending == 'й':
+        ending = 'я'
+    elif ending == 'ь':
+        ending = 'я'
+
+    first_name = first_name[:len(first_name) - 1] + ending
+    return first_name
+
+
+def SurnameDeclension(surname):
+    ending = surname[len(surname) - 1]
+
+    # FEMALE
+    if ending == 'а' or ending == 'я':
+        surname = surname[:len(surname) - 1] + 'ой'
+        return surname
+    elif ending == 'ь':
+        surname[len(surname) - 1] = 'й'
+        return surname
+    # MALE
+    if ending == 'в':
+        surname = surname + 'а'
+        return surname
+    if ending == 'й':
+        surname = surname[:len(surname) - 2] + 'ского'
+        return surname
+
+def LastNameDeclension(last_name):
+    ending = last_name[len(last_name) - 1]
+
+    if ending == 'а':
+        return last_name[:len(last_name) - 1] + 'ы'
+    elif ending == 'ч':
+        return last_name + 'а'
