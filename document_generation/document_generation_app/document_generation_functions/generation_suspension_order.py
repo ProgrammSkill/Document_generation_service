@@ -18,11 +18,21 @@ def Generation_suspension_order(validated_data):
     correspondentAccount = company['bank']['correspondentAccount']
     legalAddress = company['legalAddress']["name"]
     ActualAddreses = company['ActualAddreses'][0]["name"]
-    CEO = 'Сталюковой Екатерина Александровны'
+    first_name_CEO = 'Екатерина'
+    surname_CEO = 'Сталюкова'
+    last_name_CEO = 'Александровна'
+    CEO = surname_CEO + ' ' + first_name_CEO + ' ' + last_name_CEO
 
-    individual = 'Гайназаров Кайратбек'
-    passport_series = 'AC'
-    passport_number = '4348554'
+    individual = IndividualAPI()
+    surname = individual['fio']['secondName']
+    name = individual['fio']['firstName']
+    patronymic = individual['fio']['patronymic']
+
+    if patronymic != None and patronymic != '':
+        full_name_worker = surname + ' ' + name + ' ' + patronymic
+    else:
+        full_name_worker = surname + ' ' + name
+
 
     number = validated_data['number']
     start_date = Date_conversion_from_obj_date(validated_data['start_date'])
@@ -44,7 +54,7 @@ def Generation_suspension_order(validated_data):
         'paymentAccount': paymentAccount,
         'correspondentAccount': correspondentAccount,
         'CEO': CEO,
-        'individual': individual
+        'individual': full_name_worker
     }
 
     doc.render(context)

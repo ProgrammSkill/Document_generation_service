@@ -62,8 +62,8 @@ class SerializersNoticeConclusion(serializers.Serializer):
     address = serializers.CharField(max_length=100)
     person = serializers.CharField(write_only=True, max_length=50)
     full_name = serializers.CharField(write_only=True, max_length=55)
-    series = serializers.CharField(max_length=4)
-    number = serializers.CharField(max_length=8)
+    series = serializers.CharField(max_length=8)
+    number = serializers.CharField(max_length=10)
     date_issue = serializers.DateField(write_only=True)
     issued_by = serializers.CharField(write_only=True, max_length=100)
 
