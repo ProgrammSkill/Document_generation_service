@@ -9,7 +9,7 @@ def Date_conversion_from_obj_date(validated_date):
     else:
         day = str(validated_date.day)
 
-    if validated_date.day < 9:
+    if validated_date.month < 9:
         month = '0' + str(validated_date.month)
     else:
         month = str(validated_date.month)
@@ -59,6 +59,8 @@ def FirstNameDeclension(first_name):
         ending = 'я'
     elif ending == 'ь':
         ending = 'я'
+    else:
+        return first_name
 
     first_name = first_name[:len(first_name) - 1] + ending
     return first_name
@@ -75,11 +77,13 @@ def SurnameDeclension(surname):
         surname[len(surname) - 1] = 'й'
         return surname
     # MALE
-    if ending == 'в':
+    elif ending == 'в':
         surname = surname + 'а'
         return surname
-    if ending == 'й':
+    elif ending == 'й':
         surname = surname[:len(surname) - 2] + 'ского'
+        return surname
+    else:
         return surname
 
 def LastNameDeclension(last_name):
@@ -89,3 +93,30 @@ def LastNameDeclension(last_name):
         return last_name[:len(last_name) - 1] + 'ы'
     elif ending == 'ч':
         return last_name + 'а'
+    else:
+        return last_name
+
+def CountryDeclination(country):
+    ending = country[len(country) - 1]
+
+    if ending == 'я':
+        country = country[:len(country) - 1] + 'и'
+    elif ending == 'ы':
+        country = country[:len(country) - 1]
+    elif (country[len(country) - 2] == 'н' or country[len(country) - 2] == 'м') and ending == 'а':
+        country = country[:len(country) - 1] + 'ы'
+    elif country[len(country) - 2] == 'к' and ending == 'а':
+        country = country[0:len(country)-1] + 'и'
+    elif country[len(country) - 2] == 'ш' and ending == 'а':
+        country = country[:len(country) - 1] + 'и'
+    elif country[len(country) - 2] == 'д' and ending == 'а':
+        country = country[:len(country) - 1] + 'ы'
+    elif ending == 'й' or ending == 'ь':
+        country = country[:len(country) - 1] + 'я'
+    elif ending == 'н' or ending == 'к' or ending == 'т' or ending == 'а' or ending == 'л' or ending == 'с' or \
+            ending == 'д' or ending == 'р' or ending == 'м' or ending == 'з':
+        country = country[:len(country)] + 'а'
+
+    return country
+
+print(CountryDeclination('Казахстан'))

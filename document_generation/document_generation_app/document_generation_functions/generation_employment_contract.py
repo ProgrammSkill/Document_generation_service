@@ -3,7 +3,8 @@ from docxtpl import DocxTemplate
 from number_to_string import get_string_by_number
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, \
-    Date_conversion, Get_path_file, SurnameDeclension, FirstNameDeclension, LastNameDeclension
+    Date_conversion, Get_path_file, SurnameDeclension, FirstNameDeclension, LastNameDeclension, CountryDeclination
+import re
 
 path_file = Get_path_file()
 
@@ -14,26 +15,68 @@ def Generation_employment_contract_document(validated_data):
     phone = company["contactInfo"]["phone"]
     inn = company['inn']
     kpp = company['kpp']
-    ogrn = company['ogrn']
     paymentAccount = company['bank']['paymentAccount']
     correspondentAccount = company['bank']['correspondentAccount']
     city = company['legalAddress']["city"]
-    legalAddress = city + ' г, ' + company['legalAddress']["street"] + ', ' + company['legalAddress']["house"]
-    ActualAddreses = 'dfsds'
-    # ActualAddreses = company['ActualAddreses'][0]["city"]
-    first_name_CEO = 'Екатерина'
-    surname_CEO = 'Сталюкова'
-    last_name_CEO = 'Александровна'
-    CEO = surname_CEO + ' ' + first_name_CEO + ' ' + last_name_CEO
-    surname_CEO = SurnameDeclension(surname_CEO)
-    CEO_declension = surname_CEO + ' ' + first_name_CEO[0] + '.' + last_name_CEO[0] + '.'
+    legalAddress = company['legalAddress']['postalCode'] + ', ' + city + ' г, ' + company['legalAddress']["street"] + \
+                   ', ' + company['legalAddress']["house"]
+    ActualAddreses = company['ActualAddreses'][0]['postalCode'] + ', ' + company['ActualAddreses'][0]["city"] + \
+        ' г, ' + company['ActualAddreses'][0]["street"] + ', ' + company['ActualAddreses'][0]["house"]
+    BIC = company['bank']['bankId']
+    nameBank = company['bank']['nameBank']
+
+
+    first_name_CEO = company['director']['fio']['firstName']
+    surname_CEO = company['director']['fio']['secondName']
+    patronymic_CEO = company['director']['fio']['patronymic']
+
+    declension_first_name_CEO = FirstNameDeclension(first_name_CEO)
+    declension_surname_CEO = SurnameDeclension(surname_CEO)
+    declension_patronymic_CEO = LastNameDeclension(patronymic_CEO)
+
+    if patronymic_CEO != None and patronymic_CEO != '' and patronymic_CEO != 'string':
+        CEO = surname_CEO + ' ' + first_name_CEO + ' ' + patronymic_CEO
+        CEO_declension = declension_surname_CEO + ' ' + declension_first_name_CEO + ' ' + declension_patronymic_CEO
+        surname_initials_CEO = declension_surname_CEO + ' ' + first_name_CEO[0] + '.' + patronymic_CEO[0] + '.'
+    else:
+        CEO = surname_CEO + ' ' + first_name_CEO
+        CEO_declension = declension_surname_CEO + ' ' + declension_first_name_CEO
+        surname_initials_CEO = declension_surname_CEO + ' ' + first_name_CEO[0] + '.'
 
     individual = IndividualAPI()
     surname = individual['fio']['secondName']
     name = individual['fio']['firstName']
     patronymic = individual['fio']['patronymic']
+    birthDay = individual['birthday']
+    citizenship = CountryDeclination(individual['citizenship']).upper()
+    birthDay = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", birthDay).group(1).split('-')
+    birthDay = birthDay[2] + '.' + birthDay[1] + '.' + birthDay[0]
 
-    if patronymic != None and patronymic != '':
+    passportSeries = individual['passport']['serias']
+    passportNumber = individual['passport']['number']
+
+    if passportSeries != '' and passportSeries != None or passportSeries != 'string':
+        passport = passportSeries + passportNumber
+    else:
+        passport = passportNumber
+
+    patentSeries = individual['patent']['serias']
+    patentNumber = individual['patent']['number']
+    patent = patentSeries + patentNumber
+
+
+    dateIssuePassport = individual['passport']['dateIssue']
+    dateIssuePassport = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", dateIssuePassport).group(1).split('-')
+    dateIssuePassport = dateIssuePassport[2] + '.' + dateIssuePassport[1] + '.' + dateIssuePassport[0]
+    endDatePassport = individual['passport']['endDate']
+    endDatePassport = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", endDatePassport).group(1).split('-')
+    endDatePassport = endDatePassport[2] + '.' + endDatePassport[1] + '.' + endDatePassport[0]
+
+    dateIssuePatent = individual['patent']['dateIssue']
+    dateIssuePatent = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", dateIssuePatent).group(1).split('-')
+    dateIssuePatent = dateIssuePatent[2] + '.' + dateIssuePatent[1] + '.' + dateIssuePatent[0]
+
+    if patronymic != None and patronymic != '' and patronymic != 'string':
         full_name_worker = surname + ' ' + name + ' ' + patronymic
     else:
         full_name_worker = surname + ' ' + name
@@ -52,14 +95,19 @@ def Generation_employment_contract_document(validated_data):
         end_date = Date_conversion_from_obj_date(validated_data['end_date_urgent'])
         endDateWordMonth = Date_conversion(end_date, 'word_month')
         cause = validated_data['cause']
-        date_content = f'. Настоящий трудовой договор является срочным, заключается на срок {startDateWordMonth} по {endDateWordMonth} Обстоятельства (причины), послужившие основанием для заключения срочного трудового договора, - {cause}'
+        date_content = f'. Настоящий трудовой договор является срочным, заключается на срок с {startDateWordMonth} по {endDateWordMonth} Обстоятельства (причины), послужившие основанием для заключения срочного трудового договора, - {cause}'
 
     start_time = str(validated_data['start_time'])
     if start_time[0] == "0":
         start_time = start_time[1:]
-    end_time = str(validated_data['end_date_urgent'])
+    end_time = str(validated_data['end_time'])
     if end_time[0] == "0":
         end_time = end_time[1:]
+
+    start_time = start_time.split(':')
+    start_time = start_time[0] + ':' + start_time[1]
+    end_time = end_time.split(':')
+    end_time = end_time[0] + ':' + end_time[1]
 
     textSalary = get_string_by_number(salary).replace(' рублей 00 копеек', '', 1)
     path_file_doc = 'document_generation_app/document_templates/employment_contract.docx'
@@ -67,6 +115,7 @@ def Generation_employment_contract_document(validated_data):
 
     context = {
         'organization': organization,
+        'surnameInitialsCEO': surname_initials_CEO,
         'number': number,
         'job_title': job_title,
         'salary': salary,
@@ -87,7 +136,16 @@ def Generation_employment_contract_document(validated_data):
         'correspondentAccount': correspondentAccount,
         'ceoDeclension': CEO_declension,
         'CEO': CEO,
-        'fullName': full_name_worker
+        'fullName': full_name_worker,
+        'citizenship': citizenship,
+        'birthDay': birthDay,
+        'BIC': BIC,
+        'nameBank': nameBank,
+        'dateIssuePassport': dateIssuePassport,
+        'endDatePassport': endDatePassport,
+        'dateIssuePatent': dateIssuePatent,
+        'passport': passport,
+        'patent': patent
     }
 
     doc.render(context)

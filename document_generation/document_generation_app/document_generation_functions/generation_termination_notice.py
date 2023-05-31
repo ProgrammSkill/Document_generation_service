@@ -19,17 +19,23 @@ def Generation_termination_notice(validated_data):
     list_inn_kpp = list(f'{inn}' + '/' + f'{kpp}')
     ogrn = company['ogrn']
     list_ogrn = list('ОГРН ' + ogrn)
-    paymentAccount = company['bank']['paymentAccount'].upper()
-    correspondentAccount = company['bank']['correspondentAccount'].upper()
+    okved = company['okved']
     legalAddress = company['legalAddress']["city"] + ' г, ' + company['legalAddress']["street"] + ', ' + \
                    company['legalAddress']["house"]
     list_legalAddress = list(legalAddress.upper())
-    CEO = 'Сталюкова Екатерина Александровна'
+
+    first_name_CEO = company['director']['fio']['firstName']
+    surname_CEO = company['director']['fio']['secondName']
+    patronymic_CEO = company['director']['fio']['patronymic']
+    if patronymic_CEO != None and patronymic_CEO != '' and patronymic_CEO != 'string':
+        CEO = surname_CEO + ' ' + first_name_CEO + ' ' + patronymic_CEO
+    else:
+        CEO = surname_CEO + ' ' + first_name_CEO
 
     individual = IndividualAPI()
-    surname = individual['fio']['secondName'].upper()
-    first_name = individual['fio']['firstName'].upper()
-    patronymic = str(individual['fio']['patronymic']).upper()
+    surname = individual['fio']['secondName']
+    first_name = individual['fio']['firstName']
+    patronymic = str(individual['fio']['patronymic'])
     birthday = individual['birthday']
     citizenship = individual['citizenship'].upper()
     # passport
@@ -37,15 +43,8 @@ def Generation_termination_notice(validated_data):
     passportNumber = individual['passport']['number'].upper()
     date_issue_passport = individual['passport']['dateIssue']
     publisher = individual['passport']['publisher'].upper()
-    # patent
-    patentSeries = individual['patent']['serias'].upper()
-    patentNumber = individual['patent']['number'].upper()
-    patentDateIssue = individual['patent']['dateIssue'].upper()
-    patentEndDate = individual['patent']['endDate'].upper()
-    patentPublisher = individual['patent']['publisher'].upper()
 
-    name = validated_data['name'].upper()
-    list_name = list(name)
+    name_territorial_body = validated_data['name_territorial_body'].upper()
     job_title = validated_data['job_title'].upper()
     list_job = list(job_title)
     base = validated_data['base']
@@ -63,7 +62,7 @@ def Generation_termination_notice(validated_data):
 
     row = 11
     index = 0
-    for symbol in list_name:
+    for symbol in name_territorial_body:
         for col in range(index, len(list_columns)):
             cell = list_columns[index] + str(row)
             if list_columns[index] == 'BQ':
@@ -73,6 +72,21 @@ def Generation_termination_notice(validated_data):
                 break
             sheet[f'{cell}'] = symbol
             index += 1
+            break
+
+    list_columns_for_okved = ['AU', 'AW', 'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO', 'BQ']
+    row = 36
+    index = 0
+    stop = False
+    for symbol in okved:
+        for col in range(index, len(list_columns_for_okved)):
+            cell = list_columns_for_okved[index] + str(row)
+            sheet[f'{cell}'] = symbol
+            index += 1
+            if col == 'BQ':
+                stop = True
+            break
+        if stop == True:
             break
 
     row = 41
@@ -166,7 +180,7 @@ def Generation_termination_notice(validated_data):
         if stop == True:
             break
 
-    if patronymic != None and patronymic != '':
+    if patronymic != None and patronymic != '' and patronymic != 'string':
         list_patronymic = list(patronymic.upper())
         row = 94
         index = 0
@@ -286,114 +300,120 @@ def Generation_termination_notice(validated_data):
     # =======================================================================
 
     # ============= patent record =============
-    list_columns_for_patentSeries = ['G', 'I', 'K', 'M', 'O', 'Q', 'S']
-    row = 125
-    index = 0
-    stop = False
-    for symbol in patentSeries:
-        for col in range(index, len(list_columns_for_patentSeries)):
-            cell = list_columns_for_patentSeries[index] + str(row)
-            sheet[f'{cell}'] = symbol
-            index += 1
-            if col == 'S':
-                stop = True
-            break
-        if stop == True:
-            break
-
-    list_columns_for_patentNumber = ['Z', 'AB', 'AD', 'AF', 'AH', 'AJ', 'AL', 'AN', 'AP']
-    row = 125
-    index = 0
-    stop = False
-    for symbol in patentNumber:
-        for col in range(index, len(list_columns_for_patentNumber)):
-            cell = list_columns_for_patentNumber[index] + str(row)
-            sheet[f'{cell}'] = symbol
-            index += 1
-            if col == 'AP':
-                stop = True
-            break
-        if stop == True:
-            break
-
-    patentDateIssue = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", patentDateIssue).group(1)
-    list_date_issue_patent = patentDateIssue.split('-')
-    # day
-    sheet['BA125'], sheet['BC125'] = list_date_issue_patent[2][0], list_date_issue_patent[2][1]
-    # month
-    sheet['BF125'], sheet['BH125'] = list_date_issue_patent[1][0], list_date_issue_patent[1][1]
-    # year
-    sheet['BK125'], sheet['BM125'] = list_date_issue_patent[0][0], list_date_issue_patent[0][1]
-    sheet['BO125'], sheet['BQ125'] = list_date_issue_patent[0][2], list_date_issue_patent[0][3]
-
-    list_columns_for_publisher = ['Q', 'S', 'U', 'W', 'Y', 'AA', 'AC', 'AE', 'AG', 'AI',
-                    'AK', 'AM', 'AO', 'AQ', 'AS', 'AU', 'AW', 'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO',
-                    'BQ']
-    list_columns_for_publisher_last = ['A', 'C', 'E', 'G', 'I', 'K', 'M', 'O', 'Q', 'S', 'U', 'W', 'Y', 'AA', 'AC', 'AE', 'AG', 'AI',
-                    'AK', 'AM', 'AO', 'AQ', 'AS', 'AU', 'AW', 'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO',
-                    'BQ']
-    row = 133
-    index_publisher_last = 0
-    stop = False
-    for symbol in publisher:
-        if row == 129:
-            for col in range(index_publisher_last, len(list_columns_for_publisher_last)):
-                cell = list_columns_for_publisher_last[index_publisher_last] + str(row)
+    if individual['patent'] != None:
+        # patent
+        patentSeries = individual['patent']['serias'].upper()
+        patentNumber = individual['patent']['number'].upper()
+        patentDateIssue = individual['patent']['dateIssue'].upper()
+        patentEndDate = individual['patent']['endDate'].upper()
+        patentPublisher = individual['patent']['publisher'].upper()
+        list_columns_for_patentSeries = ['G', 'I', 'K', 'M', 'O', 'Q', 'S']
+        row = 125
+        index = 0
+        stop = False
+        for symbol in patentSeries:
+            for col in range(index, len(list_columns_for_patentSeries)):
+                cell = list_columns_for_patentSeries[index] + str(row)
                 sheet[f'{cell}'] = symbol
-                index_publisher_last += 1
-                if col == 'BQ':
+                index += 1
+                if col == 'S':
                     stop = True
                 break
             if stop == True:
                 break
-        else:
-            for col in range(index, len(list_columns_for_publisher)):
-                cell = list_columns_for_publisher[index] + str(row)
-                if list_columns_for_publisher[index] == 'BQ':
-                    sheet[f'{cell}'] = symbol
-                    row += 2
-                    index = 0
-                    break
-                sheet[f'{cell}'] = symbol
-                index += 1
-                break
 
-    # day
-    sheet['P131'], sheet['R131'] = list_date_issue_patent[2][0], list_date_issue_patent[2][1]
-    # month
-    sheet['U131'], sheet['W131'] = list_date_issue_patent[1][0], list_date_issue_patent[1][1]
-    # year
-    sheet['Z131'], sheet['AB131'] = list_date_issue_patent[0][0], list_date_issue_patent[0][1]
-    sheet['AD131'], sheet['AF131'] = list_date_issue_patent[0][2], list_date_issue_patent[0][3]
-
-    patentEndDate = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", patentEndDate).group(1)
-    list_end_date_patent = patentEndDate.split('-')
-    # day
-    sheet['AL131'], sheet['AN131'] = list_end_date_patent[2][0], list_end_date_patent[2][1]
-    # month
-    sheet['AQ131'], sheet['AS131'] = list_end_date_patent[1][0], list_end_date_patent[1][1]
-    # year
-    sheet['AV131'], sheet['AX131'] = list_end_date_patent[0][0], list_end_date_patent[0][1]
-    sheet['AZ131'], sheet['BB131'] = list_end_date_patent[0][2], list_end_date_patent[0][3]
-    # ===========================================
-
-    citizenship = individual['citizenship']
-    if citizenship == 'Киргизия' or citizenship == 'Армения' or citizenship == 'Казахстан' or citizenship == 'Беларусь':
-        name_international_agreement = "П. 1, СТАТЬИ 97, ДОГОВОРА О ЕВРАЗИЙСКОМ ЭКОНОМИЧЕСКОМ СОЮЗЕ ОТ 29.05.2014 (В РЕД. ОТ 08.05.2015)"
-        list_international_agreement = list(name_international_agreement)
-        row = 140
+        list_columns_for_patentNumber = ['X', 'Z', 'AB', 'AD', 'AF', 'AH', 'AJ', 'AL', 'AN', 'AP']
+        row = 125
         index = 0
-        for symbol in list_international_agreement:
-            for col in range(index, len(list_columns)):
-                cell = list_columns[index] + str(row)
-                if list_columns[index] == 'BQ':
-                    sheet[f'{cell}'] = symbol
-                    row += 2
-                    index = 0
-                    break
+        stop = False
+        for symbol in patentNumber:
+            for col in range(index, len(list_columns_for_patentNumber)):
+                cell = list_columns_for_patentNumber[index] + str(row)
                 sheet[f'{cell}'] = symbol
                 index += 1
+                if col == 'AP':
+                    stop = True
                 break
+            if stop == True:
+                break
+
+        patentDateIssue = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", patentDateIssue).group(1)
+        list_date_issue_patent = patentDateIssue.split('-')
+        # day
+        sheet['BA125'], sheet['BC125'] = list_date_issue_patent[2][0], list_date_issue_patent[2][1]
+        # month
+        sheet['BF125'], sheet['BH125'] = list_date_issue_patent[1][0], list_date_issue_patent[1][1]
+        # year
+        sheet['BK125'], sheet['BM125'] = list_date_issue_patent[0][0], list_date_issue_patent[0][1]
+        sheet['BO125'], sheet['BQ125'] = list_date_issue_patent[0][2], list_date_issue_patent[0][3]
+
+        list_columns_for_publisher = ['Q', 'S', 'U', 'W', 'Y', 'AA', 'AC', 'AE', 'AG', 'AI',
+                        'AK', 'AM', 'AO', 'AQ', 'AS', 'AU', 'AW', 'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO',
+                        'BQ']
+        list_columns_for_publisher_last = ['A', 'C', 'E', 'G', 'I', 'K', 'M', 'O', 'Q', 'S', 'U', 'W', 'Y', 'AA', 'AC', 'AE', 'AG', 'AI',
+                        'AK', 'AM', 'AO', 'AQ', 'AS', 'AU', 'AW', 'AY', 'BA', 'BC', 'BE', 'BG', 'BI', 'BK', 'BM', 'BO',
+                        'BQ']
+        row = 127
+        index_publisher_last = 0
+        stop = False
+        for symbol in publisher:
+            if row == 129:
+                for col in range(index_publisher_last, len(list_columns_for_publisher_last)):
+                    cell = list_columns_for_publisher_last[index_publisher_last] + str(row)
+                    sheet[f'{cell}'] = symbol
+                    index_publisher_last += 1
+                    if col == 'BQ':
+                        stop = True
+                    break
+                if stop == True:
+                    break
+            else:
+                for col in range(index, len(list_columns_for_publisher)):
+                    cell = list_columns_for_publisher[index] + str(row)
+                    if list_columns_for_publisher[index] == 'BQ':
+                        sheet[f'{cell}'] = symbol
+                        row += 2
+                        index = 0
+                        break
+                    sheet[f'{cell}'] = symbol
+                    index += 1
+                    break
+
+        # day
+        sheet['P131'], sheet['R131'] = list_date_issue_patent[2][0], list_date_issue_patent[2][1]
+        # month
+        sheet['U131'], sheet['W131'] = list_date_issue_patent[1][0], list_date_issue_patent[1][1]
+        # year
+        sheet['Z131'], sheet['AB131'] = list_date_issue_patent[0][0], list_date_issue_patent[0][1]
+        sheet['AD131'], sheet['AF131'] = list_date_issue_patent[0][2], list_date_issue_patent[0][3]
+
+        patentEndDate = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", patentEndDate).group(1)
+        list_end_date_patent = patentEndDate.split('-')
+        # day
+        sheet['AL131'], sheet['AN131'] = list_end_date_patent[2][0], list_end_date_patent[2][1]
+        # month
+        sheet['AQ131'], sheet['AS131'] = list_end_date_patent[1][0], list_end_date_patent[1][1]
+        # year
+        sheet['AV131'], sheet['AX131'] = list_end_date_patent[0][0], list_end_date_patent[0][1]
+        sheet['AZ131'], sheet['BB131'] = list_end_date_patent[0][2], list_end_date_patent[0][3]
+    # ===========================================
+    else:
+        citizenship = individual['citizenship']
+        if citizenship == 'Киргизия' or citizenship == 'Армения' or citizenship == 'Казахстан' or citizenship == 'Беларусь':
+            name_international_agreement = "П. 1, СТАТЬИ 97, ДОГОВОРА О ЕВРАЗИЙСКОМ ЭКОНОМИЧЕСКОМ СОЮЗЕ ОТ 29.05.2014 (В РЕД. ОТ 08.05.2015)"
+            row = 140
+            index = 0
+            for symbol in name_international_agreement:
+                for col in range(index, len(list_columns)):
+                    cell = list_columns[index] + str(row)
+                    if list_columns[index] == 'BQ':
+                        sheet[f'{cell}'] = symbol
+                        row += 2
+                        index = 0
+                        break
+                    sheet[f'{cell}'] = symbol
+                    index += 1
+                    break
 
     row = 151
     index = 0
@@ -417,7 +437,6 @@ def Generation_termination_notice(validated_data):
     end_date = Date_conversion_from_obj_date(end_date)
     end_date = Date_conversion(end_date)
     arr_date = end_date.split('.')
-    # print(arr_date)
     # day
     sheet['AX167'] = arr_date[0][0]
     sheet['AZ167'] = arr_date[0][1]
@@ -430,14 +449,14 @@ def Generation_termination_notice(validated_data):
     sheet['BL167'] = arr_date[2][2]
     sheet['BN167'] = arr_date[2][3]
 
-    if initiator == 'yes':
+    if initiator in 'Да':
         sheet['E174'] = 'X'
     else:
         sheet['M174'] = 'X'
 
     sheet['AK183'] = CEO
 
-    if person == 'person_proxy':
+    if person == 'Человек, который подаёт документы по доверенности':
         try:
             full_name = validated_data['full_name']
             passportSeries = validated_data['series']
@@ -459,6 +478,17 @@ def Generation_termination_notice(validated_data):
 
     else:
         sheet["AE193"] = CEO
+        passportSeries = company["director"]["passport"]['serias']
+        passportNumber = company["director"]["passport"]['number']
+        date_issue = company["director"]["passport"]['date_issue']
+        issued_by = company["director"]["passport"]['issued_by']
+
+        if len(passportSeries) == 4:
+            passportSeries = passportSeries[0] + passportSeries[1] + ' ' + passportSeries[2] + passportSeries[3]
+        sheet["G195"] = passportSeries
+        sheet["X195"] = passportNumber
+        sheet["AR195"] = Date_conversion(date_issue)
+        sheet["J197"] = issued_by
 
     global path_file
     path = path_file

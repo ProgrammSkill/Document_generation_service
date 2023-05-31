@@ -1,11 +1,15 @@
 import os
 from docxtpl import DocxTemplate
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
 from dateutil.relativedelta import relativedelta
 from number_to_string import get_string_by_number
+import re
+from django.http import FileResponse
+import io
+
 
 path_file = Get_path_file()
 
@@ -123,19 +127,23 @@ def Generation_payment_order_for_advance_payment(validated_data):
     ogrn_organization = company['ogrn']
     paymentAccount_organization = company['bank']['paymentAccount']
     correspondentAccount = company['bank']['correspondentAccount']
+    BIC = company['bank']['bankId']
+    nameBank = company['bank']['nameBank']
+    cityBank = company['bank']['city']
 
     individual = IndividualAPI()
     surname = individual['fio']['secondName']
     firstName = individual['fio']['firstName']
     patronymic = individual['fio']['patronymic']
 
-    if patronymic != None and patronymic != '':
+    if patronymic != None and patronymic != '' and patronymic != 'string':
         full_name = surname + ' ' + firstName + ' ' + patronymic
     else:
         full_name = surname + ' ' + firstName
 
     individual_inn = individual['inn']
-    expiration_date = individual['patent']['dateEnd']
+    expiration_date = individual['patent']['endDate']
+    expiration_date = re.search("([0-9]{4}\-[0-9]{2}\-[0-9]{2})", expiration_date).group(1)
     expiration_date = datetime.strptime(expiration_date, '%Y-%m-%d')
     number_months = int(validated_data['number_months'])
     territory_of_action = individual['patent']['area']
@@ -157,7 +165,7 @@ def Generation_payment_order_for_advance_payment(validated_data):
     sum = sum + '-00'
 
 
-    renewal_date = expiration_date + relativedelta(months=number_months)
+    renewal_date = expiration_date + relativedelta(months=number_months) - timedelta(days=1)
     renewal_date = Date_conversion(renewal_date.strftime("%d-%m-%Y"))
 
     expiration_date = Date_conversion(expiration_date.strftime("%d-%m-%Y"))
@@ -175,6 +183,10 @@ def Generation_payment_order_for_advance_payment(validated_data):
         'organizationINN': organization_inn,
         'organizationKPP': organization_kpp,
         'paymentAccountOrganization': paymentAccount_organization,
+        'correspondentAccount': correspondentAccount,
+        'BIC': BIC,
+        'nameBank': nameBank,
+        'cityBank': cityBank,
         'fullName': full_name,
         'individualINN': individual_inn,
         'individualKPP': organization_kpp,

@@ -13,22 +13,27 @@ def Generation_suspension_order(validated_data):
     phone = company["contactInfo"]["phone"]
     inn = company['inn']
     kpp = company['kpp']
-    ogrn = company['ogrn']
     paymentAccount = company['bank']['paymentAccount']
     correspondentAccount = company['bank']['correspondentAccount']
-    legalAddress = company['legalAddress']["name"]
-    ActualAddreses = company['ActualAddreses'][0]["name"]
-    first_name_CEO = 'Екатерина'
-    surname_CEO = 'Сталюкова'
-    last_name_CEO = 'Александровна'
-    CEO = surname_CEO + ' ' + first_name_CEO + ' ' + last_name_CEO
+    legalAddress = company['legalAddress']['postalCode'] + ', ' + company['legalAddress']['city'] + ' г, ' + company['legalAddress']["street"] + \
+                   ', ' + company['legalAddress']["house"]
+    ActualAddreses = company['ActualAddreses'][0]['postalCode'] + ', ' + company['ActualAddreses'][0]["city"] + \
+        ' г, ' + company['ActualAddreses'][0]["street"] + ', ' + company['ActualAddreses'][0]["house"]
+    first_name_CEO = company['director']['fio']['firstName']
+    surname_CEO = company['director']['fio']['secondName']
+    patronymic_CEO = company['director']['fio']['patronymic']
+
+    if patronymic_CEO != None and patronymic_CEO != '' and patronymic_CEO != 'string':
+        CEO = surname_CEO + ' ' + first_name_CEO + ' ' + patronymic_CEO
+    else:
+        CEO = surname_CEO + ' ' + first_name_CEO
 
     individual = IndividualAPI()
     surname = individual['fio']['secondName']
     name = individual['fio']['firstName']
     patronymic = individual['fio']['patronymic']
 
-    if patronymic != None and patronymic != '':
+    if patronymic != None and patronymic != '' and patronymic != 'string':
         full_name_worker = surname + ' ' + name + ' ' + patronymic
     else:
         full_name_worker = surname + ' ' + name
@@ -36,8 +41,11 @@ def Generation_suspension_order(validated_data):
 
     number = validated_data['number']
     start_date = Date_conversion_from_obj_date(validated_data['start_date'])
+    reason_suspension = validated_data['reason_suspension']
+    first_point_performer = validated_data['first_point_performer']
+    second_point_performer = validated_data['second_point_performer']
 
-    path_file_doc = 'document_generation_app/document_templates/removal_order.docx'
+    path_file_doc = 'document_generation_app/document_templates/suspension_order.docx'
     doc = DocxTemplate(path_file_doc)
 
     context = {
@@ -46,6 +54,9 @@ def Generation_suspension_order(validated_data):
         'startDateQuotes': Date_conversion(start_date, 'quotes'),
         'startDateWordMonth': Date_conversion(start_date, 'word_month'),
         'startDateStandart': Date_conversion(start_date),
+        'reasonSuspension': reason_suspension,
+        'first': first_point_performer,
+        'second': second_point_performer,
         'inn': inn,
         'kpp': kpp,
         'phone': phone,
@@ -62,7 +73,7 @@ def Generation_suspension_order(validated_data):
     global path_file
     path = path_file
     if os.path.exists(path + '/' + 'suspension_order.docx') == False:
-        doc.save(path + '/' + 'suspension_order .docx')
+        doc.save(path + '/' + 'suspension_order.docx')
     else:
         i = 1
         while True:
