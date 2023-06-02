@@ -5,6 +5,8 @@ from document_generation_app.document_generation_functions.api import CompanyAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, \
     Date_conversion, Get_path_file, SurnameDeclension, FirstNameDeclension, LastNameDeclension, CountryDeclination
 import re
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse, HttpResponse
+from django.core.files import File
 
 path_file = Get_path_file()
 
@@ -151,14 +153,21 @@ def Generation_employment_contract_document(validated_data):
     doc.render(context)
 
     global path_file
-    path = path_file
-    if os.path.exists(path + '/' + 'employment_contract.docx') == False:
-        doc.save(path + '/' + 'employment_contract.docx')
+    file = ''
+    if os.path.exists(path_file + '/' + 'employment_contract.docx') == False:
+        doc.save(path_file + '/' + 'employment_contract.docx')
+        file = path_file + '/' + 'employment_contract.docx'
     else:
         i = 1
         while True:
             if os.path.exists(path_file + '/' + f'employment_contract{i}.docx') == False:
-                path = path_file + '/' + f'employment_contract{i}.docx'
-                doc.save(path)
+                doc.save(path_file + '/' + f'employment_contract{i}.docx')
+                file = path_file + '/' + f'employment_contract{i}.docx'
                 break
             i += 1
+
+    filename = os.path.basename(file)
+    response = HttpResponse(File(open(file, 'rb')), content_type='application/msword')
+    response['Content-Length'] = os.path.getsize(file)
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    return response

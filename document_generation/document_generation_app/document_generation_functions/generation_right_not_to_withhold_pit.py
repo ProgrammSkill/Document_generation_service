@@ -4,6 +4,8 @@ from openpyxl import *
 import pytz
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse, HttpResponse
+from django.core.files import File
 
 path_file = Get_path_file()
 
@@ -252,14 +254,22 @@ def Generation_generation_right_not_to_withhold_pit(validated_data):
             break
 
     global path_file
-    path = path_file
-    if os.path.exists(path + '/' + 'right_not_to_withhold_pit.xlsx') == False:
-        doc.save(path + '/' + 'right_not_to_withhold_pit.xlsx')
+    file = ''
+    if os.path.exists(path_file + '/' + 'right_not_to_withhold_pit.xlsx') == False:
+        doc.save(path_file + '/' + 'right_not_to_withhold_pit.xlsx')
+        file = path_file + '/' + 'right_not_to_withhold_pit.xlsx'
     else:
         i = 1
         while True:
             if os.path.exists(path_file + '/' + f'right_not_to_withhold_pit{i}.xlsx') == False:
                 path = path_file + '/' + f'right_not_to_withhold_pit{i}.xlsx'
                 doc.save(path)
+                file = path_file + '/' + f'right_not_to_withhold_pit{i}.xlsx'
                 break
             i += 1
+
+    filename = os.path.basename(file)
+    response = HttpResponse(File(open(file, 'rb')), content_type='application/vnd.ms-excel')
+    response['Content-Length'] = os.path.getsize(file)
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    return response

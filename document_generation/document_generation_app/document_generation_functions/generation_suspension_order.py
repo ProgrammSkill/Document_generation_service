@@ -4,6 +4,8 @@ from datetime import datetime
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, \
     Date_conversion, Get_path_file
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse, HttpResponse
+from django.core.files import File
 
 path_file = Get_path_file()
 
@@ -71,14 +73,22 @@ def Generation_suspension_order(validated_data):
     doc.render(context)
 
     global path_file
-    path = path_file
-    if os.path.exists(path + '/' + 'suspension_order.docx') == False:
-        doc.save(path + '/' + 'suspension_order.docx')
+    file = ''
+    if os.path.exists(path_file + '/' + 'suspension_order.docx') == False:
+        doc.save(path_file + '/' + 'suspension_order.docx')
+        file = path_file + '/' + 'suspension_order.docx'
     else:
         i = 1
         while True:
             if os.path.exists(path_file + '/' + f'suspension_order{i}.docx') == False:
                 path = path_file + '/' + f'suspension_order{i}.docx'
                 doc.save(path)
+                file = path_file + '/' + f'suspension_order{i}.docx'
                 break
             i += 1
+
+    filename = os.path.basename(file)
+    response = HttpResponse(File(open(file, 'rb')), content_type='application/vnd.ms-exce')
+    response['Content-Length'] = os.path.getsize(file)
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    return response

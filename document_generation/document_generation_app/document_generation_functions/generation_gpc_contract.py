@@ -4,7 +4,8 @@ from datetime import datetime
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file, \
     SurnameDeclension, FirstNameDeclension, LastNameDeclension
-
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse, HttpResponse
+from django.core.files import File
 
 path_file = Get_path_file()
 
@@ -88,14 +89,22 @@ def Generation_GPH_contract(validated_data):
     doc.render(context)
 
     global path_file
-    path = path_file
-    if os.path.exists(path + '/' + 'GPC_agreement.docx') == False:
-        doc.save(path + '/' + 'GPC_agreement.docx')
+    file = ''
+    if os.path.exists(path_file + '/' + 'GPC_agreement.docx') == False:
+        doc.save(path_file + '/' + 'GPC_agreement.docx')
+        file = path_file + '/' + 'GPC_agreement.docx'
     else:
         i = 1
         while True:
             if os.path.exists(path_file + '/' + f'GPC_agreement{i}.docx') == False:
                 path = path_file + '/' + f'GPC_agreement{i}.docx'
                 doc.save(path)
+                file = path_file + '/' + f'GPC_agreement{i}.docx'
                 break
             i += 1
+
+    filename = os.path.basename(file)
+    response = HttpResponse(File(open(file, 'rb')), content_type='application/msword')
+    response['Content-Length'] = os.path.getsize(file)
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    return response

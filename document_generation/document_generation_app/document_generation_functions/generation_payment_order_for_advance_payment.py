@@ -1,16 +1,25 @@
 import os
+import time
 from docxtpl import DocxTemplate
 from datetime import datetime, timedelta
 import pytz
+# from fastapi import FastAPI
+# from fastapi.responses import FileResponse
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse, HttpResponse
+from wsgiref.util import FileWrapper
+from openpyxl.packaging.manifest import mimetypes
 from document_generation_app.document_generation_functions.api import CompanyAPI, IndividualAPI
 from document_generation_app.document_generation_functions.functions import Date_conversion, Get_path_file
 from dateutil.relativedelta import relativedelta
 from number_to_string import get_string_by_number
 import re
-from django.http import FileResponse
+from django.core.files import File
+# from django.http import FileResponse
 import io
+from os import path
+from django.core.files.storage import FileSystemStorage
 
-
+# app = FastAPI()
 path_file = Get_path_file()
 
 dict_patent_cost = [
@@ -199,14 +208,25 @@ def Generation_payment_order_for_advance_payment(validated_data):
     doc.render(context)
 
     global path_file
-    path = path_file
-    if os.path.exists(path + '/' + 'generation_payment_order_for_advance_payment.docx') == False:
-        doc.save(path + '/' + 'generation_payment_order_for_advance_payment.docx')
+    if os.path.exists(path_file + '/' + 'generation_payment_order_for_advance_payment.docx') == False:
+        doc.save(path_file + '/' + 'generation_payment_order_for_advance_payment.docx')
+
+        file = path_file + '/' + 'generation_payment_order_for_advance_payment.docx'
+        filename = os.path.basename(file)
+        # chunk_size = 8192
+        # response = StreamingHttpResponse(FileWrapper(open(file, 'rb'), chunk_size),
+        #                                  content_type=mimetypes.guess_type(file)[0])
     else:
         i = 1
         while True:
             if os.path.exists(path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx') == False:
-                path = path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx'
-                doc.save(path)
+                doc.save(path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx')
+                file = path_file + '/' + f'generation_payment_order_for_advance_payment{i}.docx'
                 break
             i += 1
+
+    filename = os.path.basename(file)
+    response = HttpResponse(File(open(file, 'rb')), content_type='application/msword')
+    response['Content-Length'] = os.path.getsize(file)
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    return response

@@ -1,7 +1,11 @@
 import os
 from datetime import datetime
+
+from django.http import HttpResponse
 from openpyxl import *
 from document_generation_app.document_generation_functions.functions import Date_conversion_from_obj_date, Date_conversion, Get_path_file
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse, HttpResponse
+from django.core.files import File
 
 path_file = Get_path_file()
 
@@ -432,14 +436,21 @@ def Generation_arrival_notice(validated_data):
 
 
     global path_file
-    path = path_file
-    if os.path.exists(path + '/' + 'arrival_notice.xlsx') == False:
-        doc.save(path + '/' + 'arrival_notice.xlsx')
+    file = ''
+    if os.path.exists(path_file + '/' + 'arrival_notice.xlsx') == False:
+        doc.save(path_file + '/' + 'arrival_notice.xlsx')
+        file = path_file + '/' + 'arrival_notice.xlsx'
     else:
         i = 1
         while True:
             if os.path.exists(path_file + '/' + f'arrival_notice{i}.xlsx') == False:
-                path = path_file + '/' + f'arrival_notice{i}.xlsx'
-                doc.save(path)
+                doc.save(path_file + '/' + f'arrival_notice{i}.xlsx')
+                file = path_file + '/' + f'arrival_notice{i}.xlsx'
                 break
             i += 1
+
+    filename = os.path.basename(file)
+    response = HttpResponse(File(open(file, 'rb')), content_type='application/vnd.ms-excel')
+    response['Content-Length'] = os.path.getsize(file)
+    response['Content-Disposition'] = "attachment; filename=%s" % filename
+    return response

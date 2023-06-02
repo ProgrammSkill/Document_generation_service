@@ -1,7 +1,8 @@
 from win32com.shell import shell, shellcon
+from pathlib import Path
 
 def Get_path_file():
-    return shell.SHGetKnownFolderPath(shellcon.FOLDERID_Downloads)
+    return str(Path(__file__).resolve().parent.parent / 'generated_documents')
 
 def Date_conversion_from_obj_date(validated_date):
     if validated_date.day < 9:
@@ -118,5 +119,3 @@ def CountryDeclination(country):
         country = country[:len(country)] + 'а'
 
     return country
-
-print(CountryDeclination('Казахстан'))
